@@ -1,0 +1,12 @@
+{
+    "mcpServers": {
+        "postgres-soui": {
+            "command": "npx",
+            "args": [
+                "-y",
+                "@modelcontextprotocol/server-postgres",
+                "postgresql://qa_admin:qa_secure_password@localhost:5432/soui_db"
+            ]
+        }
+    }
+}
