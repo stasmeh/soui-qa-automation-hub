@@ -83,8 +83,7 @@ docker-compose -f docker/docker-compose.yml up --build -d
 * Инструкции в `.agent/prompts/` (например, `qa_analyst.prompt.md`) позволяют ИИ читать схему базы данных напрямую, проводить сверку ожидаемого и фактического состояний данных в СУБД, а также автоматизировать написание баг-репортов.
 
 ## 📊 Диаграммы
-### ER-диаграмма базы данных
-![ER-диаграмма](docs/diagrams/erd_schema_soui.jpg)
 
-### MindMap архитектуры
-![MindMap](docs/diagrams/mindmap_soui.jpg)
+| ER-диаграмма базы данных | MindMap архитектуры |
+| :---: | :---: |
+| <img src="docs/diagrams/erd_schema_soui.jpg" width="450" /> | <img src="docs/diagrams/mindmap_soui.jpg" width="450" /> |
