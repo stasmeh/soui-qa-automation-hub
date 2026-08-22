@@ -1,68 +1,32 @@
 # 🎓 СОУИ — QA Automation & Test Engineering Hub
 
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.110.0-009688.svg?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16--alpine-336791.svg?logo=postgresql&logoColor=white)](https://www.postgresql.org)
-[![Docker](https://img.shields.io/badge/Docker-Compose-2496ED.svg?logo=docker&logoColor=white)](https://www.docker.com)
-[![Python](https://img.shields.io/badge/Python-3.11--slim-3776AB.svg?logo=python&logoColor=white)](https://www.python.org)
-[![MCP](https://img.shields.io/badge/Model_Context_Protocol-Postgres-8A2BE2.svg)](https://modelcontextprotocol.io)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.110.0-009688?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-336791?style=flat-square&logo=postgresql&logoColor=white)](https://www.postgresql.org)
+[![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=flat-square&logo=docker&logoColor=white)](https://www.docker.com)
+[![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org)
+[![Model Context Protocol](https://img.shields.io/badge/MCP-PostgreSQL-8A2BE2?style=flat-square)](https://modelcontextprotocol.io)
 
-Комплексный стенд тестирования и автоматизации для **Системы обработки учебной информации (СОУИ)**. Репозиторий содержит полнофункциональный бэкенд на FastAPI, реляционную СУБД PostgreSQL с контролем целостности, набор тест-кейсов, артефакты сниффинга трафика и конфигурацию AI-агентов через Model Context Protocol (MCP).
+Тестовый стенд и комплекс автоматизации тестирования для **Системы обработки учебной информации (СОУИ)**. Проект демонстрирует полный цикл обеспечения качества: валидацию схемы СУБД, REST API тестирование (CRUD, фильтрация, отчеты), проверку сетевого трафика и интеграцию AI-агентов через протокол MCP.
 
 ---
 
-## 🏛 Архитектура и структура проекта
+## 📌 Архитектура проекта
 
 ```text
 soui-qa-automation-hub/
-├── .agent/prompts/             # AI QA Agent Skills & System Prompts
-├── app/                        # REST API Backend (FastAPI, SQLAlchemy, Pydantic)
-│   ├── main.py                 # 8 CRUD сущностей, Swagger UI, фильтрация
-│   ├── models.py               # ORM-модели базы данных
-│   └── database.py             # Пул подключений PostgreSQL
-├── docker/                     # Конфигурация контейнеризации
-│   ├── docker-compose.yml      # Мультиконтейнерная сборка
-│   └── init-db/                # DDL-схемы и сид-данные
-├── docs/                       # Тестовая документация и диаграммы
-│   ├── test-management/        # Матрица тест-кейсов (Test Suite)
-│   └── diagrams/               # ERD и MindMap архитектуры
+├── .agent/prompts/             # Промпты и скиллы для AI QA-агента
+├── app/                        # REST API бэкенд на FastAPI
+│   ├── database.py             # Подключение к PostgreSQL (SQLAlchemy)
+│   ├── main.py                 # Реализация эндпоинтов 8 сущностей
+│   ├── models.py               # ORM-модели таблиц
+│   └── requirements.txt        # Зависимости Python
+├── docker/                     # Контейнеризация сервиса и БД
+│   ├── docker-compose.yml      # Оркестрация контейнеров
+│   └── init-db/                # DDL схемы и сид-данные
+├── docs/                       # Тестовая документация
+│   ├── diagrams/               # ERD и архитектурные диаграммы
+│   └── test-management/        # Матрица тест-кейсов (Test Suite)
 ├── mcp/                        # Конфигурация Model Context Protocol
-└── sql-tests/                  # SQL-скрипты валидации ограничений и отчетов
+└── sql-tests/                  # SQL-скрипты проверки бизнес-правил
 
-Уровень тестирования,Проверяемая логика,Инструменты / Стек
-Database Integrity,"Ограничения CHECK (оценки 0–60, часы > 0), UNIQUE, ON DELETE RESTRICT","PostgreSQL, DDL, Raw SQL"
-REST API Testing,"Полный жизненный цикл 8 сущностей (CRUD), статус-коды 200/201/400/404/409","FastAPI, Swagger/OpenAPI, Postman"
-Business Logic,"Режим преподавателя «Работа», сводная ведомость с агрегациями (AVG, COUNT)","SQLAlchemy, SQL Group By"
-Traffic & Security,"Подмена тела запросов, обход валидации интерфейса, граничные даты","Charles Proxy, Fiddler, DevTools"
-AI QA Automation,Автономная верификация БД и генерация баг-репортов,"Roo Code / Cline, Gemini, MCP"
-
-🚀 Быстрый старт стенда
-1. Локальный запуск через Docker Compose
-# Клонирование репозитория
-git clone [https://github.com/stasmeh/soui-qa-automation-hub.git](https://github.com/stasmeh/soui-qa-automation-hub.git)
-cd soui-qa-automation-hub/docker
-
-# Запуск базы данных и API
-docker compose up --build -d
-
-2. Доступ к интерактивной документации
-
-    Swagger UI: http://localhost:8000/docs
-
-    ReDoc: http://localhost:8000/redoc
-
-    PostgreSQL: localhost:5432 (soui_db, user: qa_admin, pass: qa_secure_password)
-
-🤖 Интеграция с AI-агентами (Model Context Protocol)
-
-В проект встроена конфигурация MCP-сервера базы данных PostgreSQL (mcp/cline_mcp_settings.json), позволяющая LLM-агентам автономно исследовать структуру таблиц, выполнять тестовые SQL-запросы и генерировать отчеты о дефектах по промптам из папки .agent/prompts/.
-
----
-
-### Шаг 2. Отправка `README.md` на GitHub
-
-В терминале PowerShell в папке `soui-qa-hub` выполните:
-
-```powershell
-git add README.md
-git commit -m "docs: add comprehensive project README and architecture overview"
-git push
+🎯 Матрица покрытия тестированиемУровеньПроверяемый функционалИнструментыЦелостность БДОграничения CHECK (оценки 0–60, часы > 0), UNIQUE, ON DELETE RESTRICTPostgreSQL, SQL DDLREST APIЖизненный цикл 8 сущностей (CRUD), HTTP-статусы 200, 201, 400, 404, 409FastAPI, Swagger UIБизнес-логикаКонтекстный режим преподавателя, сводные ведомости с агрегацией (AVG, COUNT)SQLAlchemy, SQL Group ByСетевой уровеньОбход клиентской валидации через Breakpoints, подмена ответов (Map Local)Charles Proxy, FiddlerAI QA AutomationАвтономный аудит схемы БД, выполнение тестов и генерация баг-репортовGemini, Roo Code / Cline, MCP
