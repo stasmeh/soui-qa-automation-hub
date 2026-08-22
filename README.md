@@ -30,7 +30,7 @@ soui-qa-automation-hub/
 │   ├── models.py               # ORM-модели таблиц
 │   └── requirements.txt        # Список зависимостей Python
 ├── docker/                     # Контейнеризация
-│   ├── docker-compose.yml      # Оркестрация контейнеров API и СУБД
+    │   ├── docker-compose.yml      # Оркестрация контейнеров API и СУБД
 │   └── init-db/                # DDL схемы и начальные данные PostgreSQL
 ├── docs/                       # Тестовая документация
 │   ├── diagrams/               # Архитектурная MindMap и ER-диаграмма
@@ -82,12 +82,9 @@ docker-compose -f docker/docker-compose.yml up --build -d
 * Файл `mcp/cline_mcp_settings.json` содержит конфигурацию подключения агента к PostgreSQL.
 * Инструкции в `.agent/prompts/` (например, `qa_analyst.prompt.md`) позволяют ИИ читать схему базы данных напрямую, проводить сверку ожидаемого и фактического состояний данных в СУБД, а также автоматизировать написание баг-репортов.
 
-## 📊 Схемы и диаграммы
-
-Ниже представлены ER-диаграмма базы данных и интеллект-карта архитектуры системы.
-
-### ER-диаграмма
+## 📊 Диаграммы
+### ER-диаграмма базы данных
 ![ER-диаграмма](docs/diagrams/erd_schema_soui.jpg)
 
-### MindMap
+### MindMap архитектуры
 ![MindMap](docs/diagrams/mindmap_soui.jpg)
