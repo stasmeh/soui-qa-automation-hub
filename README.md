@@ -27,6 +27,7 @@ soui-qa-automation-hub/
 │   ├── diagrams/               # ERD и архитектурные диаграммы
 │   └── test-management/        # Матрица тест-кейсов (Test Suite)
 ├── mcp/                        # Конфигурация Model Context Protocol
-└── sql-tests/                  # SQL-скрипты проверки бизнес-правил
+└── sql-tests/                  # SQL-скрипты проверки бизнес-правил 
+##
 
 🎯 Матрица покрытия тестированиемУровеньПроверяемый функционалИнструментыЦелостность БДОграничения CHECK (оценки 0–60, часы > 0), UNIQUE, ON DELETE RESTRICTPostgreSQL, SQL DDLREST APIЖизненный цикл 8 сущностей (CRUD), HTTP-статусы 200, 201, 400, 404, 409FastAPI, Swagger UIБизнес-логикаКонтекстный режим преподавателя, сводные ведомости с агрегацией (AVG, COUNT)SQLAlchemy, SQL Group ByСетевой уровеньОбход клиентской валидации через Breakpoints, подмена ответов (Map Local)Charles Proxy, FiddlerAI QA AutomationАвтономный аудит схемы БД, выполнение тестов и генерация баг-репортовGemini, Roo Code / Cline, MCP
