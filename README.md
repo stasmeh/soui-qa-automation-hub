@@ -6,7 +6,7 @@
 [![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org)
 [![Model Context Protocol](https://img.shields.io/badge/MCP-PostgreSQL-8A2BE2?style=flat-square)](https://modelcontextprotocol.io)
 
-Тестовый стенд и комплекс автоматизации тестирования для **Системы обработки учебной информации (СОУИ)**. Проект демонстрирует полный цикл обеспечения качества: валидацию схемы СУБД, REST API тестирование (CRUD, фильтрация, отчеты), проверку сетевого трафика и интеграцию AI-агентов через протокол MCP.
+Тестовый стенд и комплекс обеспечения качества для **Системы обработки учебной информации (СОУИ)**. Репозиторий включает бэкенд на FastAPI, реляционную СУБД PostgreSQL с контролем целостности данных, набор тестовых сценариев, артефакты сниффинга трафика и интеграцию AI-агентов через Model Context Protocol (MCP).
 
 ---
 
@@ -27,7 +27,6 @@ soui-qa-automation-hub/
 │   ├── diagrams/               # ERD и архитектурные диаграммы
 │   └── test-management/        # Матрица тест-кейсов (Test Suite)
 ├── mcp/                        # Конфигурация Model Context Protocol
-└── sql-tests/                  # SQL-скрипты проверки бизнес-правил 
-##
+└── sql-tests/                  # SQL-скрипты проверки бизнес-правил
+```
 
-🎯 Матрица покрытия тестированиемУровеньПроверяемый функционалИнструментыЦелостность БДОграничения CHECK (оценки 0–60, часы > 0), UNIQUE, ON DELETE RESTRICTPostgreSQL, SQL DDLREST APIЖизненный цикл 8 сущностей (CRUD), HTTP-статусы 200, 201, 400, 404, 409FastAPI, Swagger UIБизнес-логикаКонтекстный режим преподавателя, сводные ведомости с агрегацией (AVG, COUNT)SQLAlchemy, SQL Group ByСетевой уровеньОбход клиентской валидации через Breakpoints, подмена ответов (Map Local)Charles Proxy, FiddlerAI QA AutomationАвтономный аудит схемы БД, выполнение тестов и генерация баг-репортовGemini, Roo Code / Cline, MCP
