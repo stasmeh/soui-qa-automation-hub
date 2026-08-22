@@ -1,3 +1,9 @@
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688?style=flat&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-316192?style=flat&logo=postgresql&logoColor=white)](https://www.postgresql.org)
+[![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED?style=flat&logo=docker&logoColor=white)](https://www.docker.com)
+[![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=flat&logo=python&logoColor=white)](https://www.python.org)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 # 🎓 СОУИ — QA Engineering Hub (Sandbox with Gemini & MCP)
 
 Тестовый стенд и комплекс обеспечения качества для **Системы Обработки Учебной Информации (СОУИ)**. Проект служит учебной песочницей для практической демонстрации навыков тестирования REST API, реляционных баз данных (PostgreSQL), анализа сетевого трафика (Charles Proxy), а также интеграции ИИ-агентов на базе моделей Gemini через протокол Model Context Protocol (MCP).
