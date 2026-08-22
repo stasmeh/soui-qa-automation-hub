@@ -81,3 +81,13 @@ docker-compose -f docker/docker-compose.yml up --build -d
 Репозиторий адаптирован для совместной работы с ИИ-агентами (например, плагинами Cline, Cursor) через протокол **Model Context Protocol (MCP)**:
 * Файл `mcp/cline_mcp_settings.json` содержит конфигурацию подключения агента к PostgreSQL.
 * Инструкции в `.agent/prompts/` (например, `qa_analyst.prompt.md`) позволяют ИИ читать схему базы данных напрямую, проводить сверку ожидаемого и фактического состояний данных в СУБД, а также автоматизировать написание баг-репортов.
+
+## 📊 Схемы и диаграммы
+
+Ниже представлены ER-диаграмма базы данных и интеллект-карта архитектуры системы.
+
+### ER-диаграмма
+![ER-диаграмма](docs/diagrams/erd_schema_soui.jpg)
+
+### MindMap
+![MindMap](docs/diagrams/mindmap_soui.jpg)
