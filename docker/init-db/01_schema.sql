@@ -1,9 +1,19 @@
+-- 1. Таблица Факультетов (добавлена для целостности иерархии)
+CREATE TABLE faculty (
+    faculty_id SERIAL PRIMARY KEY,
+    name VARCHAR(150) NOT NULL CHECK (name ~ '^[А-Яа-яЁё\s]+$'),
+    dean_name VARCHAR(100) NOT NULL CHECK (dean_name ~ '^[А-Яа-яЁё\s\.]+$')
+);
+
+-- 2. Таблица Специальностей
 CREATE TABLE specialty (
     specialty_id SERIAL PRIMARY KEY,
     name VARCHAR(150) NOT NULL CHECK (name ~ '^[А-Яа-яЁё\s]+$'),
-    code_spec VARCHAR(50) NOT NULL UNIQUE CHECK (code_spec ~ '^[А-Яа-яЁё\s]+$')
+    code_spec VARCHAR(50) NOT NULL UNIQUE CHECK (code_spec ~ '^[А-Яа-яЁё\s]+$'),
+    faculty_id INT REFERENCES faculty(faculty_id) ON DELETE RESTRICT
 );
 
+-- 3. Таблица Учебных Групп
 CREATE TABLE student_group (
     group_id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL CHECK (name ~ '^[А-Яа-яЁё\s]+$'),
@@ -11,6 +21,7 @@ CREATE TABLE student_group (
     specialty_id INT NOT NULL REFERENCES specialty(specialty_id) ON DELETE RESTRICT
 );
 
+-- 4. Таблица Студентов
 CREATE TABLE student (
     student_id SERIAL PRIMARY KEY,
     last_name VARCHAR(100) NOT NULL CHECK (last_name ~ '^[А-Яа-яЁё]+$'),
@@ -21,6 +32,7 @@ CREATE TABLE student (
     group_id INT NOT NULL REFERENCES student_group(group_id) ON DELETE RESTRICT
 );
 
+-- 5. Таблица Преподавателей
 CREATE TABLE teacher (
     teacher_id SERIAL PRIMARY KEY,
     last_name VARCHAR(100) NOT NULL CHECK (last_name ~ '^[А-Яа-яЁё]+$'),
@@ -30,6 +42,7 @@ CREATE TABLE teacher (
     position VARCHAR(100) NOT NULL CHECK (position ~ '^[А-Яа-яЁё\s]+$')
 );
 
+-- 6. Таблица Дисциплин (Предметов)
 CREATE TABLE subject (
     subject_id SERIAL PRIMARY KEY,
     name VARCHAR(150) NOT NULL CHECK (name ~ '^[А-Яа-яЁё\s]+$'),
@@ -37,6 +50,7 @@ CREATE TABLE subject (
     semesters_count INT NOT NULL CHECK (semesters_count > 0)
 );
 
+-- 7. Таблица Заданий (Связь с предметом)
 CREATE TABLE assignment (
     assignment_id SERIAL PRIMARY KEY,
     variant_number INT NOT NULL,
@@ -44,11 +58,13 @@ CREATE TABLE assignment (
     subject_id INT NOT NULL REFERENCES subject(subject_id) ON DELETE RESTRICT
 );
 
+-- 8. Контрольные точки (Типы проверок)
 CREATE TABLE control_point (
     control_point_id SERIAL PRIMARY KEY,
     name VARCHAR(150) NOT NULL CHECK (name ~ '^[А-Яа-яЁё0-9\s\-]+$')
 );
 
+-- 9. Журнал Оценок (Связывает всё воедино)
 CREATE TABLE journal (
     journal_id SERIAL PRIMARY KEY,
     teacher_id INT NOT NULL REFERENCES teacher(teacher_id) ON DELETE RESTRICT,

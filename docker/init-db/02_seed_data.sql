@@ -1,65 +1,57 @@
-/* =================================================================================
-   SOUI - QA Automation Hub
-   Скрипт первичного наполнения БД (Seed Data)
-   Цель: Создание базового набора валидных данных для тестирования CRUD и JOIN-запросов.
-================================================================================= */
+-- 1. Создаем специальность
+INSERT INTO specialty (specialty_id, name, code_spec) 
+VALUES (1, 'Информатика и вычислительная техника', 'Программная инженерия');
 
--- 1. Создаем факультет
-INSERT INTO FACULTY (id, name, dean_name) 
-VALUES (1, 'Факультет информационных технологий', 'Иванов П.С.');
-
--- 2. Создаем специальность
-INSERT INTO SPECIALTY (id, code, name, faculty_id) 
-VALUES (1, '09.03.01', 'Информатика и вычислительная техника', 1);
-
--- 3. Создаем учебные группы (Проверяем корректный шифр)
-INSERT INTO STUDENT_GROUP (id, name, group_code, course, specialty_id) 
+-- 2. Создаем группы (Удовлетворяет regex: ^[А-Яа-яЁё0-9\s\-]+$)
+INSERT INTO student_group (group_id, name, group_code, specialty_id) 
 VALUES 
-    (1, 'ИВТ-1 курс', 'ИВТ-21', 1, 1),
-    (2, 'ИВТ-2 курс', 'ИВТ-22', 2, 1);
+    (1, 'Первый курс', 'ИВТ-21', 1),
+    (2, 'Второй курс', 'ИВТ-22', 1);
 
--- 4. Добавляем студентов (Основа для CRUD-тестов через API)
-INSERT INTO STUDENT (id, last_name, first_name, middle_name, record_book_number, study_form, group_id) 
+-- 3. Добавляем студентов 
+-- ВНИМАНИЕ: ФИО строго без дефисов/пробелов (из-за ограничения ^[А-Яа-яЁё]+$)
+INSERT INTO student (student_id, last_name, first_name, middle_name, student_card_number, education_form, group_id) 
 VALUES 
-    (1, 'Смирнов', 'Алексей', 'Иванович', '100101', 'бюджетное', 1), -- Отличник
-    (2, 'Петрова', 'Мария', 'Сергеевна', '100102', 'платное', 1),  -- Должник
-    (3, 'Кузнецов', 'Дмитрий', 'Андреевич', '100103', 'бюджетное', 2), -- Студент без оценок (для проверок LEFT JOIN)
-    (4, 'Соколова', 'Анна', 'Михайловна', '100104', 'бюджетное', 1);
+    (1, 'Смирнов', 'Алексей', 'Иванович', 100101, 'бюджетное', 1),
+    (2, 'Петрова', 'Мария', 'Сергеевна', 100102, 'платное', 1),
+    (3, 'Кузнецов', 'Дмитрий', 'Андреевич', 100103, 'бюджетное', 2),
+    (4, 'Соколова', 'Анна', 'Михайловна', 100104, 'бюджетное', 1);
 
--- 5. Добавляем дисциплины и преподавателей
-INSERT INTO SUBJECT (id, name, total_hours) 
+-- 4. Добавляем преподавателей
+INSERT INTO teacher (teacher_id, last_name, first_name, middle_name, department, position) 
 VALUES 
-    (1, 'Базы данных', 120),
-    (2, 'Тестирование ПО', 72);
+    (1, 'Сидоров', 'Антон', 'Алексеевич', 'Кафедра ПО', 'Доцент'),
+    (2, 'Николаев', 'Виктор', 'Васильевич', 'Кафедра ИБ', 'Профессор');
 
-INSERT INTO TEACHER (id, full_name, academic_degree, department) 
+-- 5. Добавляем дисциплины
+INSERT INTO subject (subject_id, name, hours_count, semesters_count) 
 VALUES 
-    (1, 'Сидоров А.А.', 'Кандидат наук', 'Кафедра ПО'),
-    (2, 'Николаев В.В.', 'Доцент', 'Кафедра ИБ');
+    (1, 'Базы данных', 120, 2),
+    (2, 'Тестирование ПО', 72, 1);
 
--- 6. Создаем учебный план (Связываем группу, предмет и преподавателя)
-INSERT INTO CURRICULUM (id, group_id, subject_id, teacher_id, semester, control_type) 
+-- 6. Добавляем задания и контрольные точки (Заменили Curriculum)
+INSERT INTO control_point (control_point_id, name) VALUES (1, 'Экзамен');
+INSERT INTO assignment (assignment_id, variant_number, assignment_text, subject_id) 
 VALUES 
-    (1, 1, 1, 1, 1, 'экзамен'),
-    (2, 1, 2, 2, 1, 'зачет');
+    (1, 1, 'Проектирование схемы БД', 1),
+    (2, 5, 'Написание тест кейсов', 2);
 
--- 7. Выставляем оценки в журнал (Для тестирования агрегаций и аналитики)
--- Используем 100-балльную систему (как мы условились в аналитических скриптах)
-INSERT INTO JOURNAL (id, student_id, curriculum_id, grade, grade_date) 
+-- 7. Выставляем оценки в журнал 
+-- ВНИМАНИЕ: Максимальный балл 60 (из-за CHECK grade BETWEEN 0 AND 60)
+INSERT INTO journal (journal_id, teacher_id, student_id, control_point_id, assignment_id, grade, submission_date) 
 VALUES 
-    (1, 1, 1, 95, '2023-12-20'), -- Смирнов, Базы данных (Отлично)
-    (2, 1, 2, 88, '2023-12-25'), -- Смирнов, Тестирование (Хорошо)
-    (3, 2, 1, 45, '2023-12-20'), -- Петрова, Базы данных (Неуд/Должник)
-    (4, 4, 1, 75, '2023-12-20'); -- Соколова, Базы данных (Хорошо)
-    
--- Студент Кузнецов (id=3) намеренно оставлен без оценок в журнале!
+    (1, 1, 1, 1, 1, 55, '2023-12-20'), -- Смирнов, БД (Успешно)
+    (2, 2, 1, 1, 2, 48, '2023-12-25'), -- Смирнов, Тест ПО
+    (3, 1, 2, 1, 1, 25, '2023-12-20'), -- Петрова, БД (Неуд/Должник, оценка < 30)
+    (4, 1, 4, 1, 1, 40, '2023-12-20'); -- Соколова, БД
+    -- Кузнецов без оценок
 
--- Обновляем счетчики последовательностей, чтобы POST-запросы из API не падали с ошибкой дублирования ID
-SELECT setval(pg_get_serial_sequence('FACULTY', 'id'), coalesce(max(id)+1, 1), false) FROM FACULTY;
-SELECT setval(pg_get_serial_sequence('SPECIALTY', 'id'), coalesce(max(id)+1, 1), false) FROM SPECIALTY;
-SELECT setval(pg_get_serial_sequence('STUDENT_GROUP', 'id'), coalesce(max(id)+1, 1), false) FROM STUDENT_GROUP;
-SELECT setval(pg_get_serial_sequence('STUDENT', 'id'), coalesce(max(id)+1, 1), false) FROM STUDENT;
-SELECT setval(pg_get_serial_sequence('SUBJECT', 'id'), coalesce(max(id)+1, 1), false) FROM SUBJECT;
-SELECT setval(pg_get_serial_sequence('TEACHER', 'id'), coalesce(max(id)+1, 1), false) FROM TEACHER;
-SELECT setval(pg_get_serial_sequence('CURRICULUM', 'id'), coalesce(max(id)+1, 1), false) FROM CURRICULUM;
-SELECT setval(pg_get_serial_sequence('JOURNAL', 'id'), coalesce(max(id)+1, 1), false) FROM JOURNAL;
+-- 8. Синхронизация SEQUENCE, чтобы POST API не падало при создании новых записей
+SELECT setval(pg_get_serial_sequence('specialty', 'specialty_id'), coalesce(max(specialty_id)+1, 1), false) FROM specialty;
+SELECT setval(pg_get_serial_sequence('student_group', 'group_id'), coalesce(max(group_id)+1, 1), false) FROM student_group;
+SELECT setval(pg_get_serial_sequence('student', 'student_id'), coalesce(max(student_id)+1, 1), false) FROM student;
+SELECT setval(pg_get_serial_sequence('teacher', 'teacher_id'), coalesce(max(teacher_id)+1, 1), false) FROM teacher;
+SELECT setval(pg_get_serial_sequence('subject', 'subject_id'), coalesce(max(subject_id)+1, 1), false) FROM subject;
+SELECT setval(pg_get_serial_sequence('control_point', 'control_point_id'), coalesce(max(control_point_id)+1, 1), false) FROM control_point;
+SELECT setval(pg_get_serial_sequence('assignment', 'assignment_id'), coalesce(max(assignment_id)+1, 1), false) FROM assignment;
+SELECT setval(pg_get_serial_sequence('journal', 'journal_id'), coalesce(max(journal_id)+1, 1), false) FROM journal;
