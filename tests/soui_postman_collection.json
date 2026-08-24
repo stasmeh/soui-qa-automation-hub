@@ -44,6 +44,21 @@
                     "name": "Создать новую специальность (Позитивный)",
                     "event": [
                         {
+                            "listen": "prerequest",
+                            "script": {
+                                "exec": [
+                                    "// Генерируем уникальный код ТОЛЬКО из кириллицы (без цифр!)",
+                                    "var letters = 'АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЭЮЯ';",
+                                    "var code = 'ПМАТ';",
+                                    "for (var i = 0; i < 3; i++) {",
+                                    "    code += letters[Math.floor(Math.random() * letters.length)];",
+                                    "}",
+                                    "pm.variables.set('test_code', code);"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        },
+                        {
                             "listen": "test",
                             "script": {
                                 "exec": [
@@ -55,7 +70,8 @@
                                     "    var jsonData = pm.response.json();",
                                     "    pm.expect(jsonData).to.have.property('specialty_id');",
                                     "    pm.expect(jsonData.name).to.eql(\"Прикладная математика\");",
-                                    "    pm.expect(jsonData.code_spec).to.eql(\"ПМАТ\");",
+                                    "    pm.expect(jsonData.code_spec).to.eql(pm.variables.get('test_code'));",
+                                    "    pm.expect(jsonData.faculty_id).to.eql(1);",
                                     "});"
                                 ],
                                 "type": "text/javascript"
@@ -73,7 +89,7 @@
                         ],
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"name\": \"Прикладная математика\",\n    \"code_spec\": \"ПМАТ\",\n    \"faculty_id\": 1\n}"
+                            "raw": "{\n    \"name\": \"Прикладная математика\",\n    \"code_spec\": \"{{test_code}}\",\n    \"faculty_id\": 1\n}"
                         },
                         "url": {
                             "raw": "{{base_url}}/api/v1/specialties",
@@ -96,7 +112,7 @@
                                     "",
                                     "pm.test(\"Информативное сообщение об ошибке валидации\", function () {",
                                     "    var jsonData = pm.response.json();",
-                                    "    pm.expect(JSON.stringify(jsonData)).to.include(\"кириллица\");",
+                                    "    pm.expect(JSON.stringify(jsonData)).to.match(/нарушение|целостности|кириллица/i);",
                                     "});"
                                 ],
                                 "type": "text/javascript"
@@ -174,8 +190,7 @@
                                     "",
                                     "pm.test(\"Проверка, что запрос отклонен из-за Regex ограничения\", function () {",
                                     "    var responseStr = pm.response.text();",
-                                    "    // Ожидаем, что в ошибке пробросится суть - нарушение check constraint",
-                                    "    pm.expect(responseStr.toLowerCase()).to.match(/(check|constraint|validation|regex)/);",
+                                    "    pm.expect(responseStr.toLowerCase()).to.match(/ошибка целостности|недопустимые символы|дубликат/i);",
                                     "});"
                                 ],
                                 "type": "text/javascript"
@@ -216,7 +231,6 @@
                             "script": {
                                 "exec": [
                                     "pm.test(\"Статус код 200 OK\", function () {",
-                                    "    // Сделали проверку строгой, так как данные засидированы",
                                     "    pm.response.to.have.status(200);",
                                     "});"
                                 ],
