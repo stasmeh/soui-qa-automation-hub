@@ -14,3 +14,7 @@ Format the Bug Report in Russian strictly using this structure:
 - **Actual Result (Фактический результат):** Real response / error code / DB state
 - **Expected Result (Ожидаемый результат):** Expected behavior according to specifications
 - **Root Cause Analysis (Предполагаемая причина):** Suspected code/schema issue in `app/` or DDL
+
+CRITICAL FORMATTING LAW FOR LINKS:
+- NEVER append line numbers or colons to file paths in Markdown links (NO `:10`, NO `:2`, NO `:272`).
+- Use plain, clean relative Markdown links (e.g. `[01_schema.sql](../docker/init-db/01_schema.sql)`).
