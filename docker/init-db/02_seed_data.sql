@@ -1,6 +1,10 @@
--- 1. Создаем специальность
-INSERT INTO specialty (specialty_id, name, code_spec) 
-VALUES (1, 'Информатика и вычислительная техника', 'Программная инженерия');
+-- 0. Создаем факультет
+INSERT INTO faculty (faculty_id, name, dean_name) 
+VALUES (1, 'Факультет информационных технологий', 'Иванов Иван Иванович');
+
+-- 1. Создаем специальность (привязана к факультету)
+INSERT INTO specialty (specialty_id, name, code_spec, faculty_id) 
+VALUES (1, 'Информатика и вычислительная техника', 'ИВТ', 1);
 
 -- 2. Создаем группы (Удовлетворяет regex: ^[А-Яа-яЁё0-9\s\-]+$)
 INSERT INTO student_group (group_id, name, group_code, specialty_id) 
@@ -47,6 +51,7 @@ VALUES
     -- Кузнецов без оценок
 
 -- 8. Синхронизация SEQUENCE, чтобы POST API не падало при создании новых записей
+SELECT setval(pg_get_serial_sequence('faculty', 'faculty_id'), coalesce(max(faculty_id)+1, 1), false) FROM faculty;
 SELECT setval(pg_get_serial_sequence('specialty', 'specialty_id'), coalesce(max(specialty_id)+1, 1), false) FROM specialty;
 SELECT setval(pg_get_serial_sequence('student_group', 'group_id'), coalesce(max(group_id)+1, 1), false) FROM student_group;
 SELECT setval(pg_get_serial_sequence('student', 'student_id'), coalesce(max(student_id)+1, 1), false) FROM student;

@@ -1,11 +1,18 @@
 from sqlalchemy import Column, Integer, String, Text, Date, ForeignKey
 from database import Base
 
+class Faculty(Base):
+    __tablename__ = "faculty"
+    faculty_id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(150), nullable=False)
+    dean_name = Column(String(100), nullable=False)
+
 class Specialty(Base):
     __tablename__ = "specialty"
     specialty_id = Column(Integer, primary_key=True, index=True)
     name = Column(String(150), nullable=False)
     code_spec = Column(String(50), nullable=False, unique=True)
+    faculty_id = Column(Integer, ForeignKey("faculty.faculty_id", ondelete="RESTRICT"), nullable=False)
 
 class StudentGroup(Base):
     __tablename__ = "student_group"

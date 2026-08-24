@@ -53,10 +53,10 @@ app = FastAPI(
 ## REST API Системы обработки учебной информации (СОУИ)
 
 Предоставляет программный интерфейс для автоматизации учебного процесса деканата и кафедр:
-* **Ведение справочников**: Специальности, Группы, Преподаватели, Студенты, Предметы, Задания, Контрольные точки[cite: 2].
-* **Оперативный журнал**: Выдача заданий, регистрация факта сдачи, оценивание[cite: 2].
-* **Режим преподавателя**: Фильтрация журнала в рамках конкретных дисциплин и учебных потоков[cite: 2].
-* **Аналитическая отчетность**: Формирование сводных ведомостей успеваемости с многопараметрической фильтрацией[cite: 2].
+* **Ведение справочников**: Специальности, Группы, Преподаватели, Студенты, Предметы, Задания, Контрольные точки.
+* **Оперативный журнал**: Выдача заданий, регистрация факта сдачи, оценивание.
+* **Режим преподавателя**: Фильтрация журнала в рамках конкретных дисциплин и учебных потоков.
+* **Аналитическая отчетность**: Формирование сводных ведомостей успеваемости с многопараметрической фильтрацией.
     """,
     version="1.0.0",
     openapi_tags=tags_metadata,
@@ -71,8 +71,9 @@ app = FastAPI(
 
 # 1. Специальность
 class SpecialtyBase(BaseModel):
-    name: str = Field(..., example="Программная инженерия", description="Полное наименование специальности")
-    code_spec: str = Field(..., example="ПИНЖ", description="Уникальный буквенный код специальности")
+    name: str = Field(..., example="Информатика и вычислительная техника", description="Полное наименование специальности")
+    code_spec: str = Field(..., example="ИВТ", description="Уникальный буквенный код специальности")
+    faculty_id: int = Field(..., example=1, description="Идентификатор факультета")
 
 class SpecialtyCreate(SpecialtyBase):
     pass
@@ -220,6 +221,11 @@ def get_specialty(specialty_id: int = Path(..., description="ID специаль
 @app.post("/api/v1/specialties", tags=["Специальности"], response_model=SpecialtyResponse, status_code=status.HTTP_201_CREATED, summary="Создать новую специальность")
 def create_specialty(item: SpecialtyCreate, db: Session = Depends(database.get_db)):
     """Создает новую специальность с проверкой уникальности кода и формата наименования."""
+    # Проверка существования факультета
+    faculty = db.query(models.Faculty).filter(models.Faculty.faculty_id == item.faculty_id).first()
+    if not faculty:
+        raise HTTPException(status_code=400, detail="Указанный факультет не существует")
+    
     new_item = models.Specialty(**item.model_dump())
     db.add(new_item)
     try:

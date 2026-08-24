@@ -10,7 +10,7 @@ CREATE TABLE specialty (
     specialty_id SERIAL PRIMARY KEY,
     name VARCHAR(150) NOT NULL CHECK (name ~ '^[А-Яа-яЁё\s]+$'),
     code_spec VARCHAR(50) NOT NULL UNIQUE CHECK (code_spec ~ '^[А-Яа-яЁё\s]+$'),
-    faculty_id INT REFERENCES faculty(faculty_id) ON DELETE RESTRICT
+    faculty_id INT NOT NULL REFERENCES faculty(faculty_id) ON DELETE RESTRICT
 );
 
 -- 3. Таблица Учебных Групп
