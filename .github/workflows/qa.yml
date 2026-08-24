@@ -23,7 +23,7 @@ jobs:
         run: npm install -g newman
 
       - name: 🐳 Start Docker Compose Services
-        run: docker compose up -d --build
+        run: docker compose -f docker/docker-compose.yml up -d --build
 
       - name: ⏳ Wait for PostgreSQL Healthcheck
         run: |
@@ -43,4 +43,4 @@ jobs:
 
       - name: 🛑 Teardown Containers
         if: always()
-        run: docker compose down -v
+        run: docker compose -f docker/docker-compose.yml down -v
