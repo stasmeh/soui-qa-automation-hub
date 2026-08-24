@@ -93,3 +93,10 @@ docker compose -f docker/docker-compose.yml up --build -d
 
 * GitHub: [@stasmeh](https://github.com/stasmeh)
 * Telegram: [marselle2021](https://t.me/marselle2021)
+
+## Атрибуция и источники
+
+Промты для AI-агента в директории `.agent/prompts/` основаны на материалах из репозитория
+[QA Prompt Library](https://github.com/tayyabakmal1/qa-prompt-library) (автор: Tayyab Akmal).
+Оригинальные промты были адаптированы и модифицированы под контекст проекта SOUI.
+Лицензия: MIT.
