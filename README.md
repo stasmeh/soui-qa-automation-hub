@@ -43,9 +43,9 @@ docker compose -f docker/docker-compose.yml up --build -d
 ```
 
 ### Доступ к сервисам:
-* **Swagger UI:** [`http://localhost:8000/docs`](http://localhost:8000/docs)
-* **ReDoc:** [`http://localhost:8000/redoc`](http://localhost:8000/redoc)
-* **PostgreSQL:** `localhost:5432` (`soui_db` / `qa_admin` / `qa_secure_password`)
+* **Локальный запуск (Docker Desktop):** [http://localhost:8000/docs](http://localhost:8000/docs)
+* **Запуск в GitHub Codespaces:** Вкладка `Ports` внизу экрана → порт `8000` (Forwarded Address) → значок «Open in Browser»
+* **Подключение к PostgreSQL (psql / DBeaver / MCP):** `localhost:5432` (`soui_db` / `qa_admin` / `qa_secure_password`)
 
 ---
 
