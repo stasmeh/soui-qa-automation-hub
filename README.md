@@ -1,89 +1,94 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688?style=flat&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-316192?style=flat&logo=postgresql&logoColor=white)](https://www.postgresql.org)
 [![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED?style=flat&logo=docker&logoColor=white)](https://www.docker.com)
-[![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=flat&logo=python&logoColor=white)](https://www.python.org)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![AI-Driven](https://img.shields.io/badge/AI_Agent-Zoo--code%20%7C%20Gemini-8A2BE2?style=flat&logo=openai&logoColor=white)]()
+[![MCP](https://img.shields.io/badge/MCP-Protocol-FF4500?style=flat)]()
 
-# 🎓 СОУИ — QA Testbed & AI-Assisted Automation Hub
+# 🎓 SOUI — QA Automation & AI-Driven Testing Hub
 
-Практический тестовый стенд на базе **Системы Обработки Учебной Информации (СОУИ)**. 
+Практический тестовый стенд на базе **Системы Обработки Учебной Информации (СОУИ)**. Проект разработан для демонстрации навыков автоматизации тестирования, продвинутого SQL и интеграции ИИ-агентов в реальный QA-процесс.
 
-### Для чего этот проект:
-1. **Тестирование backend-системы:** Проверка REST API (FastAPI) и валидация реляционной СУБД (PostgreSQL 16) на уровне CHECK-ограничений, внешних ключей и целостности связей.
-2. **Интеграция ИИ в QA-процессы:** Демонстрация работы ИИ-агента через **Model Context Protocol (MCP)** для прямого анализа схемы БД, граничного анализа (BVA) и автоматического составления баг-репортов.
+## 🎯 Ключевые особенности проекта
+1. **Тестирование Backend & DB:** Проверка REST API (FastAPI) и глубокая валидация СУБД (PostgreSQL 16) на уровне `CHECK`-ограничений, `FOREIGN KEY` (ON DELETE RESTRICT) и транзакций.
+2. **AI-Driven QA via MCP:** Уникальная интеграция ИИ-агента через **Model Context Protocol (MCP)**. Агент напрямую анализирует схему базы данных, выполняет граничный анализ (BVA) и автоматически генерирует формализованные баг-репорты.
+3. **Docs-as-Code:** Архитектура, тест-кейсы и баг-репорты ведутся в Markdown прямо в репозитории.
 
 ---
 
-## 🏗️ Архитектура
+## 🏗️ Архитектура и интеграция ИИ
 
 ```mermaid
 graph TD
-    Client[Client / Postman / Swagger] --> API[FastAPI Backend]
+    Client[Postman / Newman / CLI] --> API[FastAPI Backend]
     API --> DB[(PostgreSQL 16)]
-    Agent[AI Agent / Zoo-code] --> MCP[Model Context Protocol Server]
+    Agent[AI Agent / Zoo-code] --> MCP[MCP Server: postgres-soui]
     MCP --> DB
+    style Agent fill:#8A2BE2,color:#fff
+    style MCP fill:#FF4500,color:#fff
 ```
 
-* **Backend / API:** Python 3.11, FastAPI, SQLAlchemy, Pydantic
-* **Database:** PostgreSQL 16 (с CHECK-ограничениями и транзакциями)
-* **API Testing:** Postman Collection ([`soui_postman_collection.json`](tests/soui_postman_collection.json)), Newman CLI
-* **AI & MCP:** Model Context Protocol (`postgres-soui`), Zoo-code (GitHub Codespaces), Gemini API
-* **DevOps:** Docker Compose ([`docker-compose.yml`](docker/docker-compose.yml)), GitHub Actions CI/CD
+## 📂 Структура репозитория
+```text
+.
+├── app/                  # Исходный код FastAPI сервиса (models, database)
+├── docker/               # Инфраструктура: docker-compose и SQL-скрипты миграций
+├── docs/                 # QA-документация:
+│   ├── bug_reports/      #   Оформленные баг-репорты (например, [`BUG_001_group_code_hyphen_check.md`](docs/bug_reports/BUG_001_group_code_hyphen_check.md))
+│   ├── diagrams/         #   Mermaid-схемы и ERD-диаграммы базы данных
+│   ├── generated/        #   Сырые артефакты от ИИ-агента (ревью перед оформлением)
+│   └── test-management/  #   Тест-кейсы и тест-планы ([`Test_Cases_Suite.md`](docs/test-management/Test_Cases_Suite.md))
+├── mcp/                  # Конфигурация Model Context Protocol для подключения агента
+├── sql-tests/            # Сложные SQL-запросы: проверка констрейнтов и бизнес-логики
+├── tests/                # Коллекции Postman для автотестов API ([`soui_postman_collection.json`](tests/soui_postman_collection.json))
+└── .agent/prompts/       # (Скрытая директория) Системные промпты для AI-агента
+```
 
 ---
 
-## 🚀 Быстрый старт (Запуск в 1 команду)
+## 🚀 Быстрый старт
 
-### Запуск окружения
+Запуск проекта выполняется в одну команду с помощью Docker Compose:
+
 ```bash
-# Клонирование и запуск в Docker
 git clone https://github.com/stasmeh/soui-qa-automation-hub.git
 cd soui-qa-automation-hub
 docker compose -f docker/docker-compose.yml up --build -d
 ```
 
-### Доступ к сервисам:
-* **Локальный запуск (Docker Desktop):** [http://localhost:8000/docs](http://localhost:8000/docs)
-* **Запуск в GitHub Codespaces:** Вкладка `Ports` внизу экрана → порт `8000` (Forwarded Address) → значок «Open in Browser»
-* **Подключение к PostgreSQL (psql / DBeaver / MCP):** `localhost:5432` (`soui_db` / `qa_admin` / `qa_secure_password`)
+* **Swagger UI (FastAPI):** [http://localhost:8000/docs](http://localhost:8000/docs)
+* **PostgreSQL:** `localhost:5432` (User: `qa_admin`, DB: `soui_db`)
 
 ---
 
-## 🤖 AI-Driven QA & Системные промпты
+## 🤖 Как работает ИИ-агент (AI-Assisted QA)
 
-ИИ-агент подключается к PostgreSQL через MCP (`postgres-soui`) и выполняет сценарии тестирования по готовым промптам из папки [`.agent/prompts/`](.agent/prompts/):
+ИИ-агент (`Zoo-code` / `Cline`) подключается к PostgreSQL через `postgres-soui` сервер и выполняет задачи по заготовленным промптам (директория [`.agent/prompts/`](.agent/prompts/)):
 
-1. [`01_test_designer.prompt.md`](.agent/prompts/01_test_designer.prompt.md) — Проектирование тест-кейсов и матрицы покрытия.
-2. [`02_crud_testing.prompt.md`](.agent/prompts/02_crud_testing.prompt.md) — Тестирование CRUD-операций REST API.
-3. [`03_field_validation.prompt.md`](.agent/prompts/03_field_validation.prompt.md) — Валидация полей и анализ граничных значений (BVA).
-4. [`04_reports_testing.prompt.md`](.agent/prompts/04_reports_testing.prompt.md) — Проверка аналитических отчетов и SQL-агрегаций.
-5. [`05_bug_reporter.prompt.md`](.agent/prompts/05_bug_reporter.prompt.md) — Автоматическая генерация баг-репортов по стандарту.
+1. **Инспекция БД:** Агент запрашивает схему данных и находит расхождения требований (например, неверные регулярные выражения в `CHECK`).
+2. **Генерация проверок:** Создает чек-листы и SQL-тесты на основе структуры таблиц (`02_crud_testing.prompt.md`).
+3. **Оформление багов:** Автоматически парсит ошибки (например, `violates check constraint`) и переводит их в стандартные баг-репорты Jira-формата (`05_bug_reporter.prompt.md`).
 
-Подробное руководство: [`AI_Agent_Demo_Guide.md`](docs/AI_Agent_Demo_Guide.md).
+Подробное руководство по настройке агента: [`AI_Agent_Demo_Guide.md`](docs/AI_Agent_Demo_Guide.md).
 
 ---
 
-## 📂 Артефакты тестирования
+## 🧪 Запуск тестов
 
-* **Тест-кейсы:** [`Test_Cases_Suite.md`](docs/test-management/Test_Cases_Suite.md)
-* **Баг-репорты:** [`BUG_001_group_code_hyphen_check.md`](docs/BUG_001_group_code_hyphen_check.md) (дефект регулярного выражения в схеме БД)
-* **Схема данных:** [`erd_schema_soui.jpg`](docs/diagrams/erd_schema_soui.jpg), [`mindmap_soui.jpg`](docs/diagrams/mindmap_soui.jpg)
-* **SQL-проверки:** [`01_integrity_and_constraints.sql`](sql-tests/01_integrity_and_constraints.sql), [`02_business_logic_reports.sql`](sql-tests/02_business_logic_reports.sql)
+1. **API-автотесты (Postman + Newman):**
+   ```bash
+   npm install
+   npm run test:api
+   ```
 
----
-
-## 🧪 Запуск тестов вручную
-
-```bash
-# 1. Запуск SQL-тестов целостности БД
-docker exec -i soui_qa_db psql -U qa_admin -d soui_db < sql-tests/01_integrity_and_constraints.sql
-
-# 2. Запуск API-автотестов через Newman
-npm install && npm run test:api
-```
+2. **Интеграционные SQL-тесты целостности БД:**
+   ```bash
+   docker exec -i soui_qa_db psql -U qa_admin -d soui_db < sql-tests/01_integrity_and_constraints.sql
+   ```
 
 ---
 
 ## 👤 Автор
 
-* **QA Engineer:** Станислав Меховский ([@stasmeh](https://github.com/stasmeh))
+Станислав Меховский | QA Engineer
+
+* GitHub: [@stasmeh](https://github.com/stasmeh)
