@@ -1,8 +1,8 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688?style=flat&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-316192?style=flat&logo=postgresql&logoColor=white)](https://www.postgresql.org)
 [![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED?style=flat&logo=docker&logoColor=white)](https://www.docker.com)
-[![AI-Driven](https://img.shields.io/badge/AI_Agent-Zoo--code%20%7C%20Gemini-8A2BE2?style=flat&logo=openai&logoColor=white)]()
-[![MCP](https://img.shields.io/badge/MCP-Protocol-FF4500?style=flat)]()
+![AI-Driven](https://img.shields.io/badge/AI_Agent-Zoo--code%20%7C%20Gemini-8A2BE2?style=flat&logo=openai&logoColor=white)
+![MCP](https://img.shields.io/badge/MCP-Protocol-FF4500?style=flat)
 
 # 🎓 SOUI — QA Automation & AI-Driven Testing Hub
 
@@ -30,16 +30,17 @@ graph TD
 ## 📂 Структура репозитория
 ```text
 .
+.
 ├── app/                  # Исходный код FastAPI сервиса (models, database)
 ├── docker/               # Инфраструктура: docker-compose и SQL-скрипты миграций
 ├── docs/                 # QA-документация:
-│   ├── bug_reports/      #   Оформленные баг-репорты (например, [`BUG_001_group_code_hyphen_check.md`](docs/bug_reports/BUG_001_group_code_hyphen_check.md))
+│   ├── bug_reports/      #   Оформленные баг-репорты (например, BUG_001)
 │   ├── diagrams/         #   Mermaid-схемы и ERD-диаграммы базы данных
 │   ├── generated/        #   Сырые артефакты от ИИ-агента (ревью перед оформлением)
-│   └── test-management/  #   Тест-кейсы и тест-планы ([`Test_Cases_Suite.md`](docs/test-management/Test_Cases_Suite.md))
+│   └── test-management/  #   Тест-кейсы и тест-планы (Test_Cases_Suite.md)
 ├── mcp/                  # Конфигурация Model Context Protocol для подключения агента
 ├── sql-tests/            # Сложные SQL-запросы: проверка констрейнтов и бизнес-логики
-├── tests/                # Коллекции Postman для автотестов API ([`soui_postman_collection.json`](tests/soui_postman_collection.json))
+├── tests/                # Коллекции Postman для автотестов API
 └── .agent/prompts/       # (Скрытая директория) Системные промпты для AI-агента
 ```
 
@@ -92,3 +93,4 @@ docker compose -f docker/docker-compose.yml up --build -d
 Станислав Меховский | QA Engineer
 
 * GitHub: [@stasmeh](https://github.com/stasmeh)
+* Telegram: marselle2021
