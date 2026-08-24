@@ -1,0 +1,11 @@
+{
+  "name": "soui-qa-automation-hub",
+  "version": "1.0.0",
+  "description": "СОУИ — QA Engineering Hub & AI Sandbox API testing",
+  "scripts": {
+    "test:api": "newman run tests/soui_postman_collection.json --env-var baseUrl=http://localhost:8000"
+  },
+  "devDependencies": {
+    "newman": "^6.0.0"
+  }
+}

@@ -1,0 +1,56 @@
+name: QA Automation Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Copy env file
+        run: cp .env.example .env
+
+      - name: Build and start Docker services
+        run: docker-compose -f docker/docker-compose.yml up -d --build
+
+      - name: Wait for PostgreSQL and API to be healthy
+        run: |
+          echo "Waiting for services to start..."
+          # Wait up to 60 seconds for FastAPI to respond on healthcheck
+          for i in {1..30}; do
+            if curl -s http://localhost:8000/docs > /dev/null; then
+              echo "Services are ready!"
+              exit 0
+            fi
+            echo "FastAPI is not ready yet, sleeping 2s..."
+            sleep 2
+          done
+          echo "Timeout waiting for services"
+          docker-compose -f docker/docker-compose.yml ps
+          docker-compose -f docker/docker-compose.yml logs
+          exit 1
+
+      - name: Run Newman API Tests
+        run: npm run test:api
+
+      - name: Run Integrity and Constraints SQL Tests
+        run: docker exec -i soui_qa_db psql -U qa_admin -d soui_db < sql-tests/01_integrity_and_constraints.sql
+
+      - name: Run Business Logic and Reports SQL Tests
+        run: docker exec -i soui_qa_db psql -U qa_admin -d soui_db < sql-tests/02_business_logic_reports.sql

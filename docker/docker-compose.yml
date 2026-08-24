@@ -5,13 +5,18 @@ services:
     image: postgres:16-alpine
     container_name: soui_qa_db
     environment:
-      POSTGRES_DB: soui_db
-      POSTGRES_USER: qa_admin
-      POSTGRES_PASSWORD: qa_secure_password
+      POSTGRES_DB: ${POSTGRES_DB:-soui_db}
+      POSTGRES_USER: ${POSTGRES_USER:-qa_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-qa_secure_password}
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - ./init-db:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-qa_admin} -d $${POSTGRES_DB:-soui_db}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   soui-web-api:
     build:
@@ -19,8 +24,14 @@ services:
       dockerfile: Dockerfile
     container_name: soui_web_service
     ports:
-      - "8000:8000"
+      - "${APP_PORT:-8000}:8000"
     environment:
-      DATABASE_URL: postgresql://qa_admin:qa_secure_password@postgres-db:5432/soui_db
+      DATABASE_URL: ${DATABASE_URL:-postgresql://qa_admin:qa_secure_password@postgres-db:5432/soui_db}
     depends_on:
-      - postgres-db
+      postgres-db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/docs')"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
