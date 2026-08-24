@@ -93,4 +93,4 @@ docker compose -f docker/docker-compose.yml up --build -d
 Станислав Меховский | QA Engineer
 
 * GitHub: [@stasmeh](https://github.com/stasmeh)
-* Telegram: marselle2021
+* Telegram: [marselle2021](https://t.me/marselle2021)
