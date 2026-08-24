@@ -31,9 +31,16 @@ jobs:
           timeout 60 bash -c 'until docker exec soui_qa_db pg_isready -U qa_admin -d soui_db; do sleep 2; done'
           echo "Database is ready!"
 
+      - name: ⏳ Wait for FastAPI Web Service Healthcheck
+        run: |
+          echo "Waiting for FastAPI service to start..."
+          timeout 60 bash -c 'until curl -s http://localhost:8000/docs > /dev/null; do sleep 2; done'
+          echo "FastAPI service is up and running!"
+
       - name: 🧪 Run SQL Integrity & Constraint Tests
         run: |
           docker exec -i soui_qa_db psql -U qa_admin -d soui_db < sql-tests/01_integrity_and_constraints.sql || true
+          docker exec -i soui_qa_db psql -U qa_admin -d soui_db < sql-tests/02_business_logic_reports.yaml || true
           docker exec -i soui_qa_db psql -U qa_admin -d soui_db < sql-tests/02_business_logic_reports.sql
 
       - name: 🚀 Run Newman API Automation Suite
