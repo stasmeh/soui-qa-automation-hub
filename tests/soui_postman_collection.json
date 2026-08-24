@@ -1,291 +1,291 @@
 {
-	"info": {
-		"_postman_id": "3b29c9ef-871d-4876-b684-bc4882b5fae5",
-		"name": "СОУИ API - QA Sandbox Collection",
-		"description": "Коллекция API-запросов для Системы Обработки Учебной Информации (СОУИ). Содержит примеры позитивных и негативных проверок с авто-тестами на JavaScript.",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-	},
-	"item": [
-		{
-			"name": "1. Специальности (Specialties)",
-			"item": [
-				{
-					"name": "Получить список специальностей",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Статус код 200\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});",
-									"",
-									"pm.test(\"Ответ является массивом\", function () {",
-									"    var jsonData = pm.response.json();",
-									"    pm.expect(jsonData).to.be.an('array');",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/v1/specialties",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"specialties"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Создать новую специальность (Позитивный)",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Статус код 201 Created\", function () {",
-									"    pm.response.to.have.status(201);",
-									"});",
-									"",
-									"pm.test(\"Проверка структуры созданной специальности\", function () {",
-									"    var jsonData = pm.response.json();",
-									"    pm.expect(jsonData).to.have.property('specialty_id');",
-									"    pm.expect(jsonData.name).to.eql(\"Прикладная математика\");",
-									"    pm.expect(jsonData.code_spec).to.eql(\"ПМАТ\");",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Прикладная математика\",\n    \"code_spec\": \"ПМАТ\"\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/v1/specialties",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"specialties"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Попытка создать специальность с латиницей (Негативный)",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Статус код 400 Bad Request\", function () {",
-									"    pm.response.to.have.status(400);",
-									"});",
-									"",
-									"pm.test(\"Информативное сообщение об ошибке валидации\", function () {",
-									"    var jsonData = pm.response.json();",
-									"    pm.expect(jsonData.detail).to.include(\"допустима только кириллица\");",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Informatics\",\n    \"code_spec\": \"ИНФ\"\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/v1/specialties",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"specialties"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "2. Студенты (Students)",
-			"item": [
-				{
-					"name": "Получить список студентов",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Статус код 200 OK\", function () {",
-									"    pm.response.to.have.status(200);",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/api/v1/students?sort_by=last_name",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"students"
-							],
-							"query": [
-								{
-									"key": "sort_by",
-									"value": "last_name"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "3. Журнал успеваемости (Journal)",
-			"item": [
-				{
-					"name": "Фиксация сдачи работы и выставление оценки (Граница 45)",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Статус код 200 OK либо 404 если запись не существует\", function () {",
-									"    pm.expect(pm.response.code).to.be.oneOf([200, 404]);",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"grade\": 45,\n    \"submission_date\": \"2026-05-20\"\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/v1/journal/1/grade",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"journal",
-								"1",
-								"grade"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Выставить некорректную оценку (Негативный 61 балл)",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.test(\"Отказ валидации - Ошибка 422 или 400\", function () {",
-									"    pm.expect(pm.response.code).to.be.oneOf([400, 422]);",
-									"});"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"grade\": 61,\n    \"submission_date\": \"2026-05-20\"\n}"
-						},
-						"url": {
-							"raw": "{{base_url}}/api/v1/journal/1/grade",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"journal",
-								"1",
-								"grade"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		}
-	],
-	"variable": [
-		{
-			"key": "base_url",
-			"value": "http://localhost:8000",
-			"type": "string"
-		}
-	]
+    "info": {
+        "_postman_id": "3b29c9ef-871d-4876-b684-bc4882b5fae5",
+        "name": "СОУИ API - QA Sandbox Collection",
+        "description": "Коллекция API-запросов для Системы Обработки Учебной Информации (СОУИ). Содержит примеры позитивных и негативных проверок с авто-тестами на JavaScript.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "1. Специальности (Specialties)",
+            "item": [
+                {
+                    "name": "Получить список специальностей",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Статус код 200\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Ответ является массивом\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData).to.be.an('array');",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/specialties",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "specialties"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Создать новую специальность (Позитивный)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Статус код 201 Created\", function () {",
+                                    "    pm.response.to.have.status(201);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Проверка структуры созданной специальности\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData).to.have.property('specialty_id');",
+                                    "    pm.expect(jsonData.name).to.eql(\"Прикладная математика\");",
+                                    "    pm.expect(jsonData.code_spec).to.eql(\"ПМАТ\");",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Прикладная математика\",\n    \"code_spec\": \"ПМАТ\",\n    \"faculty_id\": 1\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/specialties",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "specialties"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Попытка создать специальность с латиницей (Негативный)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Статус код 400 Bad Request\", function () {",
+                                    "    pm.response.to.have.status(400);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Информативное сообщение об ошибке валидации\", function () {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    pm.expect(jsonData.detail).to.include(\"допустима только кириллица\");",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"Informatics\",\n    \"code_spec\": \"ИНФ\",\n    \"faculty_id\": 1\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/specialties",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "specialties"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "2. Студенты (Students)",
+            "item": [
+                {
+                    "name": "Получить список студентов",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Статус код 200 OK\", function () {",
+                                    "    pm.response.to.have.status(200);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "GET",
+                        "header": [],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/students?sort_by=last_name",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "students"
+                            ],
+                            "query": [
+                                {
+                                    "key": "sort_by",
+                                    "value": "last_name"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        },
+        {
+            "name": "3. Журнал успеваемости (Journal)",
+            "item": [
+                {
+                    "name": "Фиксация сдачи работы и выставление оценки (Граница 45)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Статус код 200 OK либо 404 если запись не существует\", function () {",
+                                    "    pm.expect(pm.response.code).to.be.oneOf([200, 404]);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"grade\": 45,\n    \"submission_date\": \"2026-05-20\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/journal/1/grade",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "journal",
+                                "1",
+                                "grade"
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Выставить некорректную оценку (Негативный 61 балл)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Отказ валидации - Ошибка 422 или 400\", function () {",
+                                    "    pm.expect(pm.response.code).to.be.oneOf([400, 422]);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"grade\": 61,\n    \"submission_date\": \"2026-05-20\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/journal/1/grade",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "journal",
+                                "1",
+                                "grade"
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ],
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost:8000",
+            "type": "string"
+        }
+    ]
 }
