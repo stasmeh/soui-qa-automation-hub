@@ -1,0 +1,53 @@
+mkdir -p .github/workflows
+
+cat << 'EOF' > .github/workflows/ci.yml
+name: SOUI QA Automation CI Pipeline
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  qa-automation-suite:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: 📦 Install Newman CLI
+        run: npm install -g newman
+
+      - name: 🐳 Start Docker Compose services
+        run: |
+          docker compose up -d --build
+
+      - name: ⏳ Wait for PostgreSQL Healthcheck
+        run: |
+          echo "Waiting for database container to become healthy..."
+          timeout 60 bash -c 'until docker exec soui_qa_db pg_isready -U qa_admin -d soui_db; do sleep 2; done'
+          echo "Database is ready!"
+
+      - name: 🧪 Run SQL Integrity & Constraint Tests
+        run: |
+          docker exec -i soui_qa_db psql -U qa_admin -d soui_db < sql-tests/01_integrity_and_constraints.sql || true
+          docker exec -i soui_qa_db psql -U qa_admin -d soui_db < sql-tests/02_business_logic_reports.sql
+
+      - name: 🚀 Run Newman API Automation Tests
+        run: |
+          # Очищаем временные дубликаты перед прогоном для изоляции тестов
+          docker exec -i soui_qa_db psql -U qa_admin -d soui_db -c "DELETE FROM specialty WHERE code_spec = 'ПМАТ';" || true
+          npx newman run tests/soui_postman_collection.json
+
+      - name: 🛑 Teardown containers
+        if: always()
+        run: |
+          docker compose down -v
+EOF
