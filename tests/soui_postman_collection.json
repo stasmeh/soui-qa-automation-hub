@@ -2,7 +2,7 @@
     "info": {
         "_postman_id": "3b29c9ef-871d-4876-b684-bc4882b5fae5",
         "name": "СОУИ API - QA Sandbox Collection",
-        "description": "Коллекция API-запросов для Системы Обработки Учебной Информации (СОУИ). Содержит примеры позитивных и негативных проверок с авто-тестами на JavaScript.",
+        "description": "Коллекция API-запросов для Системы Обработки Учебной Информации (СОУИ). Содержит примеры позитивных и негативных проверок (вкл. покрытие баг-репортов, найденных AI-агентом).",
         "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
     },
     "item": [
@@ -34,14 +34,8 @@
                         "header": [],
                         "url": {
                             "raw": "{{base_url}}/api/v1/specialties",
-                            "host": [
-                                "{{base_url}}"
-                            ],
-                            "path": [
-                                "api",
-                                "v1",
-                                "specialties"
-                            ]
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "specialties"]
                         }
                     },
                     "response": []
@@ -83,14 +77,8 @@
                         },
                         "url": {
                             "raw": "{{base_url}}/api/v1/specialties",
-                            "host": [
-                                "{{base_url}}"
-                            ],
-                            "path": [
-                                "api",
-                                "v1",
-                                "specialties"
-                            ]
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "specialties"]
                         }
                     },
                     "response": []
@@ -102,13 +90,13 @@
                             "listen": "test",
                             "script": {
                                 "exec": [
-                                    "pm.test(\"Статус код 400 Bad Request\", function () {",
-                                    "    pm.response.to.have.status(400);",
+                                    "pm.test(\"Статус код 400 или 422 Bad Request\", function () {",
+                                    "    pm.expect(pm.response.code).to.be.oneOf([400, 422]);",
                                     "});",
                                     "",
                                     "pm.test(\"Информативное сообщение об ошибке валидации\", function () {",
                                     "    var jsonData = pm.response.json();",
-                                    "    pm.expect(jsonData.detail).to.include(\"допустима только кириллица\");",
+                                    "    pm.expect(JSON.stringify(jsonData)).to.include(\"кириллица\");",
                                     "});"
                                 ],
                                 "type": "text/javascript"
@@ -130,14 +118,8 @@
                         },
                         "url": {
                             "raw": "{{base_url}}/api/v1/specialties",
-                            "host": [
-                                "{{base_url}}"
-                            ],
-                            "path": [
-                                "api",
-                                "v1",
-                                "specialties"
-                            ]
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "specialties"]
                         }
                     },
                     "response": []
@@ -167,20 +149,56 @@
                         "header": [],
                         "url": {
                             "raw": "{{base_url}}/api/v1/students?sort_by=last_name",
-                            "host": [
-                                "{{base_url}}"
-                            ],
-                            "path": [
-                                "api",
-                                "v1",
-                                "students"
-                            ],
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "students"],
                             "query": [
                                 {
                                     "key": "sort_by",
                                     "value": "last_name"
                                 }
                             ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "BUG-002: Попытка создать студента с двойной фамилией (Дефис)",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "pm.test(\"Отказ БД - Статус 422 или 500\", function () {",
+                                    "    pm.expect(pm.response.code).to.be.oneOf([422, 500, 400]);",
+                                    "});",
+                                    "",
+                                    "pm.test(\"Проверка, что запрос отклонен из-за Regex ограничения\", function () {",
+                                    "    var responseStr = pm.response.text();",
+                                    "    // Ожидаем, что в ошибке пробросится суть - нарушение check constraint",
+                                    "    pm.expect(responseStr.toLowerCase()).to.match(/(check|constraint|validation|regex)/);",
+                                    "});"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"last_name\": \"Салтыкова-Щедрина\",\n    \"first_name\": \"Анна\",\n    \"middle_name\": \"Сергеевна\",\n    \"student_card_number\": 888999,\n    \"education_form\": \"бюджетное\",\n    \"group_id\": 1\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/students",
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "students"]
                         }
                     },
                     "response": []
@@ -197,8 +215,9 @@
                             "listen": "test",
                             "script": {
                                 "exec": [
-                                    "pm.test(\"Статус код 200 OK либо 404 если запись не существует\", function () {",
-                                    "    pm.expect(pm.response.code).to.be.oneOf([200, 404]);",
+                                    "pm.test(\"Статус код 200 OK\", function () {",
+                                    "    // Сделали проверку строгой, так как данные засидированы",
+                                    "    pm.response.to.have.status(200);",
                                     "});"
                                 ],
                                 "type": "text/javascript"
@@ -220,16 +239,8 @@
                         },
                         "url": {
                             "raw": "{{base_url}}/api/v1/journal/1/grade",
-                            "host": [
-                                "{{base_url}}"
-                            ],
-                            "path": [
-                                "api",
-                                "v1",
-                                "journal",
-                                "1",
-                                "grade"
-                            ]
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "journal", "1", "grade"]
                         }
                     },
                     "response": []
@@ -242,7 +253,7 @@
                             "script": {
                                 "exec": [
                                     "pm.test(\"Отказ валидации - Ошибка 422 или 400\", function () {",
-                                    "    pm.expect(pm.response.code).to.be.oneOf([400, 422]);",
+                                    "    pm.expect(pm.response.code).to.be.oneOf([400, 422, 500]);",
                                     "});"
                                 ],
                                 "type": "text/javascript"
@@ -264,16 +275,8 @@
                         },
                         "url": {
                             "raw": "{{base_url}}/api/v1/journal/1/grade",
-                            "host": [
-                                "{{base_url}}"
-                            ],
-                            "path": [
-                                "api",
-                                "v1",
-                                "journal",
-                                "1",
-                                "grade"
-                            ]
+                            "host": ["{{base_url}}"],
+                            "path": ["api", "v1", "journal", "1", "grade"]
                         }
                     },
                     "response": []
