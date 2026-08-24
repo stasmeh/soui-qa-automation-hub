@@ -7,7 +7,7 @@ CREATE TABLE specialty (
 CREATE TABLE student_group (
     group_id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL CHECK (name ~ '^[А-Яа-яЁё\s]+$'),
-    group_code VARCHAR(50) NOT NULL UNIQUE CHECK (group_code ~ '^[А-Яа-яЁё0-9\s]+$'),
+    group_code VARCHAR(50) NOT NULL UNIQUE CHECK (group_code ~ '^[А-Яа-яЁё0-9\s\-]+$'),
     specialty_id INT NOT NULL REFERENCES specialty(specialty_id) ON DELETE RESTRICT
 );
 
@@ -46,7 +46,7 @@ CREATE TABLE assignment (
 
 CREATE TABLE control_point (
     control_point_id SERIAL PRIMARY KEY,
-    name VARCHAR(150) NOT NULL CHECK (name ~ '^[А-Яа-яЁё0-9\s]+$')
+    name VARCHAR(150) NOT NULL CHECK (name ~ '^[А-Яа-яЁё0-9\s\-]+$')
 );
 
 CREATE TABLE journal (
