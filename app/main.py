@@ -231,12 +231,16 @@ def create_specialty(item: SpecialtyCreate, db: Session = Depends(database.get_d
     try:
         db.commit()
         db.refresh(new_item)
-    except IntegrityError:
+    except IntegrityError as e:
         db.rollback()
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Нарушение ограничений целостности: код специальности должен быть уникальным, допустима только кириллица"
-        )
+        # Разбор ошибки
+        error_msg = str(e.orig)
+        if "specialty_code_spec_key" in error_msg:
+            raise HTTPException(status_code=400, detail="Код специальности уже существует")
+        elif "specialty_faculty_id_fkey" in error_msg:
+            raise HTTPException(status_code=400, detail="Указанный факультет не существует")
+        else:
+            raise HTTPException(status_code=400, detail="Нарушение целостности данных")
     return new_item
 
 @app.put("/api/v1/specialties/{specialty_id}", tags=["Специальности"], response_model=SpecialtyResponse, summary="Обновить данные специальности")
