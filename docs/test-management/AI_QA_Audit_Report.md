@@ -20,7 +20,7 @@
 
 ## 2. Проверка CRUD-логики и ограничений (`02_crud_testing.prompt.md`)
 
-В ходе проверки целостности связей и CRUD-операций с использованием [`postgres-soui`](mcp/cline_mcp_settings.json:3) и контейнера [`soui_qa_db`](docker/docker-compose.yml:6) установлено:
+В ходе проверки целостности связей и CRUD-операций с использованием [`postgres-soui`](../../mcp/cline_mcp_settings.json:3) и контейнера [`soui_qa_db`](../../docker/docker-compose.yml:6) установлено:
 - Каскадные и защитные ограничения (`ON DELETE RESTRICT`) на внешних ключах (`student_group_id_fkey`, `student_group_id_fkey`, `journal_student_id_fkey`) отрабатывают корректно, предотвращая нарушение целостности данных при попытке удаления родительских справочных сущностей.
 - Уникальные индексы (`student_card_number_key`) корректно блокируют дублирование студенческих билетов.
 
