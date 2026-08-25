@@ -21,10 +21,13 @@
 graph TD
     Client[Postman / Newman / CLI] --> API[FastAPI Backend]
     API --> DB[(PostgreSQL 16)]
-    Agent[Zoo-code Agent <br/> 🧠 Gemini AI] --> MCP[MCP Server: postgres-soui]
+    
+    LLM((Gemini AI)) -. API Key .-> Agent[Zoo-code]
+    Agent --> MCP[MCP Server: postgres-soui]
     MCP --> DB
     
     style Agent fill:#8A2BE2,color:#fff
+    style LLM fill:#1E88E5,color:#fff
     style MCP fill:#FF4500,color:#fff
 ```
 
