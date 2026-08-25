@@ -17,11 +17,13 @@
 
 ## 🏗️ Архитектура и интеграция ИИ
 
+```mermaid
 graph TD
     Client[Postman / Newman / CLI] --> API[FastAPI Backend]
     API --> DB[(PostgreSQL 16)]
     Agent[Zoo-code Agent <br/> 🧠 Gemini AI] --> MCP[MCP Server: postgres-soui]
     MCP --> DB
+    
     style Agent fill:#8A2BE2,color:#fff
     style MCP fill:#FF4500,color:#fff
 
