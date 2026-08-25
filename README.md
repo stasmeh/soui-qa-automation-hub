@@ -36,7 +36,7 @@ graph TD
 ├── docs/                 # QA-документация:
 │   ├── bug_reports/      #   Оформленные баг-репорты 
 │   ├── diagrams/         #   Mermaid-схемы и ERD-диаграммы базы данных
-│   └── test-management/  #   Тест-кейсы и тест-планы (Test_Cases_Suite.md)
+│   └── test-management/  #   Тест-кейсы и отчёты о тестировании (QA_Checklist.md)
 ├── mcp/                  # Конфигурация Model Context Protocol для подключения агента
 ├── sql-tests/            # SQL-скрипты: проверка констрейнтов и целостности данных
 ├── tests/                # Коллекции Postman для автотестов API
