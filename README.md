@@ -19,34 +19,31 @@
 
 ```mermaid
 graph TD
-    %% Определение узлов с использованием HTML-тегов для стилизации текста
-    Client("<b>Client</b><br/>(Postman / Newman / CLI)")
-    API("<b>API</b><br/>(FastAPI Backend)")
-    DB1[("(PostgreSQL 16)")]
-    DB2[("(PostgreSQL 16)")]
-    LLM("(Gemini AI)")
-    Agent("<b>Zoo-code</b><br/>Agent")
-    MCP("<b>MCP Server</b><br/>(postgres-soui)")
+    %% Определение узлов
+    Client("Client<br/>(Postman / Newman / CLI)")
+    API("API<br/>(FastAPI Backend)")
+    DB[("Database<br/>(PostgreSQL 16)")]
+    
+    LLM(("Gemini AI"))
+    Agent("Agent<br/>(Zoo-code)")
+    MCP("MCP Server<br/>(postgres-soui)")
 
-    %% Определение связей
-    Client -->|REST API| API
-    API -->|SQL / ORM| DB1
+    %% Определение связей (всё сходится к единой БД)
+    Client -->|HTTP / REST| API
+    API -->|SQL / ORM| DB
     
-    LLM -.->|API Key| Agent
-    Agent -->|JSON-RPC / MCP| MCP
-    MCP -->|SQL| DB2
+    LLM -. API Key .-> Agent
+    Agent -->|MCP Protocol| MCP
+    MCP -->|SQL Tests / Checks| DB
 
-    %% Стилизация узлов и стрелок
-    linkStyle 2 stroke:#ccc,stroke-width:2px,stroke-dasharray: 5 5;
+    %% Стилизация узлов (мягкие цвета для лучшей читаемости)
+    style Client fill:#f8f9fa,stroke:#ced4da,stroke-width:2px,color:#212529
+    style API fill:#d1e7dd,stroke:#198754,stroke-width:2px,color:#212529
+    style DB fill:#cfe2ff,stroke:#0d6efd,stroke-width:2px,color:#212529
     
-    style Client fill:#f9f9f9,stroke:#333,stroke-width:2px,color:black
-    style API fill:#D1FAE5,stroke:#10B981,stroke-width:2px,color:black,stroke-radius: 5px
-    style DB1 fill:#C3DAFE,stroke:#4F46E5,stroke-width:2px,color:black
-    style DB2 fill:#C3DAFE,stroke:#4F46E5,stroke-width:2px,color:black
-    
-    style LLM fill:#DBEAFE,stroke:#1E88E5,stroke-width:2px,rx:15,ry:15,color:black
-    style Agent fill:#EDE9FE,stroke:#8A2BE2,stroke-width:2px,color:black
-    style MCP fill:#FFEDD5,stroke:#FF4500,stroke-width:2px,color:black
+    style LLM fill:#e2e3e5,stroke:#6c757d,stroke-width:2px,color:#212529
+    style Agent fill:#e0cffc,stroke:#8a2be2,stroke-width:2px,color:#212529
+    style MCP fill:#ffe69c,stroke:#ff8c00,stroke-width:2px,color:#212529
 ```
 
 ## 📂 Структура репозитория
