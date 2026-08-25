@@ -19,19 +19,37 @@
 
 ```mermaid
 graph TD
-    Client[Postman / Newman / CLI] --> API[FastAPI Backend]
-    API --> DB[(PostgreSQL 16)]
+    %% Определение узлов с использованием HTML-тегов для стилизации текста
+    Client("<b>Client</b><br/>(Postman / Newman / CLI)")
+    API("<b>API</b><br/>(FastAPI Backend)")
+    DB1[("(PostgreSQL 16)")]
+    DB2[("(PostgreSQL 16)")]
+    LLM("(Gemini AI)")
+    Agent("<b>Zoo-code</b><br/>Agent")
+    MCP("<b>MCP Server</b><br/>(postgres-soui)")
+
+    %% Определение связей
+    Client -->|REST API| API
+    API -->|SQL / ORM| DB1
     
-    LLM((Gemini AI)) -. API Key .-> Agent[Zoo-code]
-    Agent --> MCP[MCP Server: postgres-soui]
-    MCP --> DB
+    LLM -.->|API Key| Agent
+    Agent -->|JSON-RPC / MCP| MCP
+    MCP -->|SQL| DB2
+
+    %% Стилизация узлов и стрелок
+    linkStyle 2 stroke:#ccc,stroke-width:2px,stroke-dasharray: 5 5;
     
-    style Agent fill:#8A2BE2,color:#fff
-    style LLM fill:#1E88E5,color:#fff
-    style MCP fill:#FF4500,color:#fff
+    style Client fill:#f9f9f9,stroke:#333,stroke-width:2px,color:black
+    style API fill:#D1FAE5,stroke:#10B981,stroke-width:2px,color:black,stroke-radius: 5px
+    style DB1 fill:#C3DAFE,stroke:#4F46E5,stroke-width:2px,color:black
+    style DB2 fill:#C3DAFE,stroke:#4F46E5,stroke-width:2px,color:black
+    
+    style LLM fill:#DBEAFE,stroke:#1E88E5,stroke-width:2px,rx:15,ry:15,color:black
+    style Agent fill:#EDE9FE,stroke:#8A2BE2,stroke-width:2px,color:black
+    style MCP fill:#FFEDD5,stroke:#FF4500,stroke-width:2px,color:black
 ```
 
-## 📂 Структура репозиторияя
+## 📂 Структура репозитория
 ```text
 .
 .
