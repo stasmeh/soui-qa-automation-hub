@@ -26,8 +26,9 @@ graph TD
     
     style Agent fill:#8A2BE2,color:#fff
     style MCP fill:#FF4500,color:#fff
+```
 
-## 📂 Структура репозитория
+## 📂 Структура репозиторияя
 ```text
 .
 .
