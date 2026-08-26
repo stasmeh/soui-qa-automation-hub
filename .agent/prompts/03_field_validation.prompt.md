@@ -11,7 +11,7 @@ Create test cases for:
 - Data type validation (string vs integer, invalid UUIDs)
 - Format validation (email, dates)
 - Length constraints (empty strings `""`, whitespace, exceeding VARCHAR length)
-- Boundary checks & PostgreSQL CHECK constraint violations (e.g., grade < 1 or > 5)
+- Boundary checks & PostgreSQL CHECK constraint violations (e.g., grade < 0 or > 60)
 
 Format output as a Markdown table in Russian:
 `| Поле | Тестовое значение | Ожидаемый код ответа | Слой перехвата (Pydantic / DB Check) | Ожидаемое поведение |`

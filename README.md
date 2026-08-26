@@ -64,7 +64,7 @@ graph TD
 ├── docker/               # Инфраструктура: docker-compose и SQL-скрипты миграций
 ├── docs/                 # QA-документация:
 │   ├── bug_reports/      #   Оформленные баг-репорты 
-│   ├── diagrams/         #   Mermaid-схемы и ERD-диаграммы базы данных
+│   ├── diagrams/         #   Диаграммы (erd_schema_soui.jpg, mindmap_soui.jpg)
 │   └── test-management/  #   Тест-кейсы и отчёты о тестировании (QA_Checklist.md)
 ├── mcp/                  # Конфигурация Model Context Protocol для подключения агента
 ├── sql-tests/            # SQL-скрипты: проверка констрейнтов и целостности данных
