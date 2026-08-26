@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "ms-python.python",
+    "ms-azuretools.vscode-docker",
+    "postman.postman-for-vscode",
+    "bierner.markdown-mermaid",
+    "ZooCodeOrganization.zoo-code"
+  ]
+}
