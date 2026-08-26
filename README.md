@@ -24,59 +24,45 @@ SOUI — это учебно-демонстрационный стенд (QA-п�
 
 ```mermaid
 graph LR
-    %% Классические инструменты QA
-    subgraph QA_Tools ["🧪 Test Execution"]
-        Newman("Newman / Postman<br/>(API Tests)")
-    end
-
-    %% Зона тестируемого приложения (Docker)
+    %% Тестируемое приложение
     subgraph Docker ["🐳 System Under Test (Docker)"]
-        direction TB
-        API("FastAPI Backend<br/>(localhost:8000)")
-        DB[("PostgreSQL 16<br/>(localhost:5432)")]
+        API("FastAPI")
+        DB[("PostgreSQL")]
         
-        API -->|"SQL / ORM"| DB
+        API -->|"ORM"| DB
     end
 
-    %% Зона ИИ и Агента
-    subgraph AI_Env ["🤖 AI QA Automation (Zoo-code)"]
-        direction TB
-        LLM(("Gemini AI"))
-        Agent("QA Agent<br/>(Zero-Search Policy)")
-        MCP("MCP Server<br/>(postgres-soui)")
-        Terminal(">_ Terminal<br/>(curl / bash)")
-
-        Agent <-->|"Prompts / Responses"| LLM
-        Agent -->|"mcp_tool"| MCP
-        Agent -->|"execute_command"| Terminal
+    %% ИИ-Агент
+    subgraph AI ["🤖 AI Automation"]
+        LLM(("Gemini")) <--> Agent("QA Agent")
+        Agent -->|"mcp_tool"| MCP("MCP Server")
     end
 
-    %% Внешние связи (Кросс-доменные)
-    Newman -->|"HTTP / REST"| API
-    Terminal -->|"HTTP (curl) / REST"| API
-    MCP -->|"Read-only SQL"| DB
+    %% Классические тесты
+    Newman("Newman")
 
-    %% Настройки стилей (Твоя палитра)
-    classDef default fill:#f8f9fa,stroke:#ced4da,stroke-width:1px,color:#212529
-    classDef ext fill:#f8d7da,stroke:#dc3545,stroke-width:2px,color:#212529
+    %% Взаимодействие
+    Newman -->|"HTTP"| API
+    Agent -->|"HTTP (curl)"| API
+    MCP -->|"SQL (Read-only)"| DB
+
+    %% Стили
     classDef api fill:#d1e7dd,stroke:#198754,stroke-width:2px,color:#212529
     classDef db fill:#cfe2ff,stroke:#0d6efd,stroke-width:2px,color:#212529
-    classDef mcp fill:#ffe69c,stroke:#ff8c00,stroke-width:2px,color:#212529
     classDef agent fill:#e0cffc,stroke:#8a2be2,stroke-width:2px,color:#212529
+    classDef mcp fill:#ffe69c,stroke:#ff8c00,stroke-width:2px,color:#212529
+    classDef ext fill:#f8d7da,stroke:#dc3545,stroke-width:2px,color:#212529
     classDef llm fill:#e2e3e5,stroke:#6c757d,stroke-width:2px,color:#212529
 
-    %% Применение стилей
-    class Newman,Terminal ext
     class API api
     class DB db
-    class MCP mcp
     class Agent agent
+    class MCP mcp
+    class Newman ext
     class LLM llm
 
-    %% Стили для рамок (subgraphs)
     style Docker fill:#f0f8ff,stroke:#0d6efd,stroke-width:2px,stroke-dasharray: 5 5
-    style AI_Env fill:#fdf5e6,stroke:#ff8c00,stroke-width:2px,stroke-dasharray: 5 5
-    style QA_Tools fill:#f8f9fa,stroke:#6c757d,stroke-width:2px,stroke-dasharray: 5 5
+    style AI fill:#fdf5e6,stroke:#ff8c00,stroke-width:2px,stroke-dasharray: 5 5
 ```
 
 ## 🛠 Стек технологий
