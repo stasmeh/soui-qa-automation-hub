@@ -24,28 +24,25 @@ SOUI — это учебно-демонстрационный стенд (QA-п�
 
 ```mermaid
 graph TD
-    Client("Client<br/>(Postman / Newman / CLI)")
-    API("API<br/>(FastAPI Backend)")
-    DB[("Database<br/>(PostgreSQL 16)")]
-    
-    LLM(("Gemini AI"))
-    Agent("Agent<br/>(Zoo-code)")
-    MCP("MCP Server<br/>(postgres-soui)")
+    Client("Client<br/>(Postman / Newman / CLI)") -->|HTTP / REST| API("API<br/>(FastAPI Backend)")
+    API -->|SQL / ORM| DB[("Database<br/>(PostgreSQL 16)")]
 
-    Client -->|HTTP / REST| API
-    API -->|SQL / ORM| DB
-    
-    LLM -. API Key .-> Agent
-    Agent -->|MCP Protocol| MCP
-    MCP -->|SQL Tests / Checks| DB
+    LLM(("Gemini AI")) -. API Key .-> Agent("Agent<br/>(Zoo-code)")
+
+    Agent -->|MCP Protocol| MCP("MCP Server<br/>(postgres-soui)")
+    MCP -->|SQL Queries (read-only)| DB
+
+    Agent -->|"execute_command"| Terminal("Terminal / curl")
+    Terminal -->|HTTP / REST| API
 
     style Client fill:#f8f9fa,stroke:#ced4da,stroke-width:2px,color:#212529
     style API fill:#d1e7dd,stroke:#198754,stroke-width:2px,color:#212529
     style DB fill:#cfe2ff,stroke:#0d6efd,stroke-width:2px,color:#212529
-    
+
     style LLM fill:#e2e3e5,stroke:#6c757d,stroke-width:2px,color:#212529
     style Agent fill:#e0cffc,stroke:#8a2be2,stroke-width:2px,color:#212529
     style MCP fill:#ffe69c,stroke:#ff8c00,stroke-width:2px,color:#212529
+    style Terminal fill:#f8d7da,stroke:#dc3545,stroke-width:2px,color:#212529
 ```
 
 ## 🛠 Стек технологий
