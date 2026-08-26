@@ -24,16 +24,16 @@ SOUI — это учебно-демонстрационный стенд (QA-п�
 
 ```mermaid
 graph TD
-    Client("Client<br/>(Postman / Newman / CLI)") -->|HTTP / REST| API("API<br/>(FastAPI Backend)")
-    API -->|SQL / ORM| DB[("Database<br/>(PostgreSQL 16)")]
+    Client("Client<br/>(Postman / Newman / CLI)") -->|"HTTP / REST"| API("API<br/>(FastAPI Backend)")
+    API -->|"SQL / ORM"| DB[("Database<br/>(PostgreSQL 16)")]
 
-    LLM(("Gemini AI")) -. API Key .-> Agent("Agent<br/>(Zoo-code)")
+    LLM(("Gemini AI")) -. "API Key" .-> Agent("Agent<br/>(Zoo-code)")
 
-    Agent -->|MCP Protocol| MCP("MCP Server<br/>(postgres-soui)")
-    MCP -->|SQL Queries (read-only)| DB
+    Agent -->|"MCP Protocol"| MCP("MCP Server<br/>(postgres-soui)")
+    MCP -->|"SQL Queries read-only"| DB
 
     Agent -->|"execute_command"| Terminal("Terminal / curl")
-    Terminal -->|HTTP / REST| API
+    Terminal -->|"HTTP / REST"| API
 
     style Client fill:#f8f9fa,stroke:#ced4da,stroke-width:2px,color:#212529
     style API fill:#d1e7dd,stroke:#198754,stroke-width:2px,color:#212529
