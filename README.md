@@ -23,26 +23,57 @@ SOUI — это учебно-демонстрационный стенд (QA-п�
 ## 🏗️ Архитектура и интеграция ИИ
 
 ```mermaid
-graph TD
-    Client("Client<br/>(Postman / Newman / CLI)") -->|"HTTP / REST"| API("API<br/>(FastAPI Backend)")
-    API -->|"SQL / ORM"| DB[("Database<br/>(PostgreSQL 16)")]
+graph LR
+    %% Клиентская часть
+    Client("Client<br/>(Postman / Newman / CLI)")
 
-    LLM(("Gemini AI")) -. "API Key" .-> Agent("Agent<br/>(Zoo-code)")
+    %% Зона тестируемого приложения (Docker)
+    subgraph Docker_Env ["🐳 Docker Compose (Test Environment)"]
+        direction TB
+        API("API<br/>(FastAPI Backend)")
+        DB[("Database<br/>(PostgreSQL 16)")]
+        MCP("MCP Server<br/>(postgres-soui)")
 
-    Agent -->|"MCP Protocol"| MCP("MCP Server<br/>(postgres-soui)")
-    MCP -->|"SQL Queries read-only"| DB
+        API -->|"SQL / ORM"| DB
+        MCP -->|"Read-only SQL"| DB
+    end
 
-    Agent -->|"execute_command"| Terminal("Terminal / curl")
+    %% Зона ИИ и Агента
+    subgraph AI_Ecosystem ["🤖 AI Automation Environment"]
+        direction TB
+        LLM(("Gemini AI"))
+        Agent("Agent<br/>(Zoo-code)")
+        Terminal("Terminal / curl")
+
+        Agent <-->|"Prompts / API"| LLM
+        Agent -->|"execute_command"| Terminal
+    end
+
+    %% Внешние связи между зонами
+    Client -->|"HTTP / REST"| API
+    Agent -->|"MCP Protocol"| MCP
     Terminal -->|"HTTP / REST"| API
 
-    style Client fill:#f8f9fa,stroke:#ced4da,stroke-width:2px,color:#212529
-    style API fill:#d1e7dd,stroke:#198754,stroke-width:2px,color:#212529
-    style DB fill:#cfe2ff,stroke:#0d6efd,stroke-width:2px,color:#212529
+    %% Настройки стилей (classDef)
+    classDef default fill:#f8f9fa,stroke:#ced4da,stroke-width:1px,color:#212529
+    classDef ext fill:#f8d7da,stroke:#dc3545,stroke-width:2px,color:#212529
+    classDef api fill:#d1e7dd,stroke:#198754,stroke-width:2px,color:#212529
+    classDef db fill:#cfe2ff,stroke:#0d6efd,stroke-width:2px,color:#212529
+    classDef mcp fill:#ffe69c,stroke:#ff8c00,stroke-width:2px,color:#212529
+    classDef agent fill:#e0cffc,stroke:#8a2be2,stroke-width:2px,color:#212529
+    classDef llm fill:#e2e3e5,stroke:#6c757d,stroke-width:2px,color:#212529
 
-    style LLM fill:#e2e3e5,stroke:#6c757d,stroke-width:2px,color:#212529
-    style Agent fill:#e0cffc,stroke:#8a2be2,stroke-width:2px,color:#212529
-    style MCP fill:#ffe69c,stroke:#ff8c00,stroke-width:2px,color:#212529
-    style Terminal fill:#f8d7da,stroke:#dc3545,stroke-width:2px,color:#212529
+    %% Применение стилей
+    class Client,Terminal ext
+    class API api
+    class DB db
+    class MCP mcp
+    class Agent agent
+    class LLM llm
+
+    %% Стили для рамок (subgraphs)
+    style Docker_Env fill:#f0f8ff,stroke:#0d6efd,stroke-width:2px,stroke-dasharray: 5 5
+    style AI_Ecosystem fill:#fdf5e6,stroke:#ff8c00,stroke-width:2px,stroke-dasharray: 5 5
 ```
 
 ## 🛠 Стек технологий
