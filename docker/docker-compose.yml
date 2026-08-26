@@ -11,6 +11,7 @@ services:
     ports:
       - "${POSTGRES_PORT:-5432}:5432"
     volumes:
+      - soui_pg_data:/var/lib/postgresql/data
       - ./init-db:/docker-entrypoint-initdb.d
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-qa_admin} -d $${POSTGRES_DB:-soui_db}"]
@@ -23,10 +24,15 @@ services:
       context: ../app
       dockerfile: Dockerfile
     container_name: soui_web_service
+    # Переопределяем команду запуска: добавляем --reload для локальной разработки
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
     ports:
       - "${APP_PORT:-8000}:8000"
     environment:
       DATABASE_URL: ${DATABASE_URL:-postgresql://qa_admin:qa_secure_password@postgres-db:5432/soui_db}
+    volumes:
+      # Пробрасываем код с хоста внутрь контейнера (чтобы --reload видел изменения файлов)
+      - ../app:/app
     depends_on:
       postgres-db:
         condition: service_healthy
@@ -35,3 +41,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+
+volumes:
+  soui_pg_data:
