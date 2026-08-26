@@ -1,8 +1,10 @@
+[![QA Automation Pipeline](https://github.com/stasmeh/soui-qa-automation-hub/actions/workflows/qa.yml/badge.svg)](https://github.com/stasmeh/soui-qa-automation-hub/actions/workflows/qa.yml)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688?style=flat&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-316192?style=flat&logo=postgresql&logoColor=white)](https://www.postgresql.org)
 [![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED?style=flat&logo=docker&logoColor=white)](https://www.docker.com)
 ![AI-Driven](https://img.shields.io/badge/AI_Agent-Zoo--code%20%7C%20Gemini-8A2BE2?style=flat&logo=openai&logoColor=white)
 ![MCP](https://img.shields.io/badge/MCP-Protocol-FF4500?style=flat)
+
 
 # 🎓 SOUI — QA Automation & AI-Driven Testing Hub
 
