@@ -2,7 +2,7 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688?style=flat&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-316192?style=flat&logo=postgresql&logoColor=white)](https://www.postgresql.org)
 [![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED?style=flat&logo=docker&logoColor=white)](https://www.docker.com)
-![AI-Driven](https://img.shields.io/badge/AI_Agent-Zoo--code%20%7C%20Gemini-8A2BE2?style=flat&logo=openai&logoColor=white)
+![AI-Driven](https://img.shields.io/badge/AI_Agent-Zoo--code%20%7C%20Gemini-8A2BE2?style=flat&logo=googlegemini&logoColor=white)
 ![MCP](https://img.shields.io/badge/MCP-Protocol-FF4500?style=flat)
 
 
@@ -24,7 +24,6 @@ SOUI — это учебно-демонстрационный стенд (QA-п�
 
 ```mermaid
 graph TD
-    %% Определение узлов
     Client("Client<br/>(Postman / Newman / CLI)")
     API("API<br/>(FastAPI Backend)")
     DB[("Database<br/>(PostgreSQL 16)")]
@@ -33,7 +32,6 @@ graph TD
     Agent("Agent<br/>(Zoo-code)")
     MCP("MCP Server<br/>(postgres-soui)")
 
-    %% Определение связей (всё сходится к единой БД)
     Client -->|HTTP / REST| API
     API -->|SQL / ORM| DB
     
@@ -41,7 +39,6 @@ graph TD
     Agent -->|MCP Protocol| MCP
     MCP -->|SQL Tests / Checks| DB
 
-    %% Стилизация узлов (мягкие цвета для лучшей читаемости)
     style Client fill:#f8f9fa,stroke:#ced4da,stroke-width:2px,color:#212529
     style API fill:#d1e7dd,stroke:#198754,stroke-width:2px,color:#212529
     style DB fill:#cfe2ff,stroke:#0d6efd,stroke-width:2px,color:#212529
@@ -72,7 +69,8 @@ graph TD
 ├── mcp/                  # Конфигурация Model Context Protocol для подключения агента
 ├── sql-tests/            # SQL-скрипты: проверка констрейнтов и целостности данных
 ├── tests/                # Коллекции Postman для автотестов API
-└── .agent/promts/       # (Скрытая директория) Промпты для AI-агента
+├── .agent/prompts/       # Системные промпты для AI-агента
+└── package.json          # Скрипты запуска автотестов Newman
 ```
 
 ---
