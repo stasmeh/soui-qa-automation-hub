@@ -24,37 +24,39 @@ SOUI — это учебно-демонстрационный стенд (QA-п�
 
 ```mermaid
 graph LR
-    %% Клиентская часть
-    Client("Client<br/>(Postman / Newman / CLI)")
+    %% Классические инструменты QA
+    subgraph QA_Tools ["🧪 Test Execution"]
+        Newman("Newman / Postman<br/>(API Tests)")
+    end
 
     %% Зона тестируемого приложения (Docker)
-    subgraph Docker_Env ["🐳 Docker Compose (Test Environment)"]
+    subgraph Docker ["🐳 System Under Test (Docker)"]
         direction TB
-        API("API<br/>(FastAPI Backend)")
-        DB[("Database<br/>(PostgreSQL 16)")]
-        MCP("MCP Server<br/>(postgres-soui)")
-
+        API("FastAPI Backend<br/>(localhost:8000)")
+        DB[("PostgreSQL 16<br/>(localhost:5432)")]
+        
         API -->|"SQL / ORM"| DB
-        MCP -->|"Read-only SQL"| DB
     end
 
     %% Зона ИИ и Агента
-    subgraph AI_Ecosystem ["🤖 AI Automation Environment"]
+    subgraph AI_Env ["🤖 AI QA Automation (Zoo-code)"]
         direction TB
         LLM(("Gemini AI"))
-        Agent("Agent<br/>(Zoo-code)")
-        Terminal("Terminal / curl")
+        Agent("QA Agent<br/>(Zero-Search Policy)")
+        MCP("MCP Server<br/>(postgres-soui)")
+        Terminal(">_ Terminal<br/>(curl / bash)")
 
-        Agent <-->|"Prompts / API"| LLM
+        Agent <-->|"Prompts / Responses"| LLM
+        Agent -->|"mcp_tool"| MCP
         Agent -->|"execute_command"| Terminal
     end
 
-    %% Внешние связи между зонами
-    Client -->|"HTTP / REST"| API
-    Agent -->|"MCP Protocol"| MCP
-    Terminal -->|"HTTP / REST"| API
+    %% Внешние связи (Кросс-доменные)
+    Newman -->|"HTTP / REST"| API
+    Terminal -->|"HTTP (curl) / REST"| API
+    MCP -->|"Read-only SQL"| DB
 
-    %% Настройки стилей (classDef)
+    %% Настройки стилей (Твоя палитра)
     classDef default fill:#f8f9fa,stroke:#ced4da,stroke-width:1px,color:#212529
     classDef ext fill:#f8d7da,stroke:#dc3545,stroke-width:2px,color:#212529
     classDef api fill:#d1e7dd,stroke:#198754,stroke-width:2px,color:#212529
@@ -64,7 +66,7 @@ graph LR
     classDef llm fill:#e2e3e5,stroke:#6c757d,stroke-width:2px,color:#212529
 
     %% Применение стилей
-    class Client,Terminal ext
+    class Newman,Terminal ext
     class API api
     class DB db
     class MCP mcp
@@ -72,8 +74,9 @@ graph LR
     class LLM llm
 
     %% Стили для рамок (subgraphs)
-    style Docker_Env fill:#f0f8ff,stroke:#0d6efd,stroke-width:2px,stroke-dasharray: 5 5
-    style AI_Ecosystem fill:#fdf5e6,stroke:#ff8c00,stroke-width:2px,stroke-dasharray: 5 5
+    style Docker fill:#f0f8ff,stroke:#0d6efd,stroke-width:2px,stroke-dasharray: 5 5
+    style AI_Env fill:#fdf5e6,stroke:#ff8c00,stroke-width:2px,stroke-dasharray: 5 5
+    style QA_Tools fill:#f8f9fa,stroke:#6c757d,stroke-width:2px,stroke-dasharray: 5 5
 ```
 
 ## 🛠 Стек технологий
