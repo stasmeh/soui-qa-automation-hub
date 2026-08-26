@@ -23,30 +23,10 @@ SOUI — это учебно-демонстрационный стенд (QA-п�
 ## 🏗️ Архитектура и интеграция ИИ
 
 ```mermaid
-graph LR
-    %% Тестируемое приложение
-    subgraph Docker ["🐳 System Under Test (Docker)"]
-        API("FastAPI")
-        DB[("PostgreSQL")]
-        
-        API -->|"ORM"| DB
-    end
-
-    %% ИИ-Агент
-    subgraph AI ["🤖 AI Automation"]
-        LLM(("Gemini")) <--> Agent("QA Agent")
-        Agent -->|"mcp_tool"| MCP("MCP Server")
-    end
-
-    %% Классические тесты
-    Newman("Newman")
-
-    %% Взаимодействие
-    Newman -->|"HTTP"| API
-    Agent -->|"HTTP (curl)"| API
-    MCP -->|"SQL (Read-only)"| DB
-
-    %% Стили
+flowchart LR
+    %% ==========================================
+    %% НАСТРОЙКИ СТИЛЕЙ (Определяются в начале)
+    %% ==========================================
     classDef api fill:#d1e7dd,stroke:#198754,stroke-width:2px,color:#212529
     classDef db fill:#cfe2ff,stroke:#0d6efd,stroke-width:2px,color:#212529
     classDef agent fill:#e0cffc,stroke:#8a2be2,stroke-width:2px,color:#212529
@@ -54,13 +34,45 @@ graph LR
     classDef ext fill:#f8d7da,stroke:#dc3545,stroke-width:2px,color:#212529
     classDef llm fill:#e2e3e5,stroke:#6c757d,stroke-width:2px,color:#212529
 
-    class API api
-    class DB db
-    class Agent agent
-    class MCP mcp
-    class Newman ext
-    class LLM llm
+    %% ==========================================
+    %% ОПРЕДЕЛЕНИЕ УЗЛОВ И СТРУКТУРЫ
+    %% ==========================================
+    
+    %% Классические тесты
+    Newman("Newman"):::ext
 
+    %% Тестируемое приложение
+    subgraph Docker ["🐳 System Under Test (Docker)"]
+        API("FastAPI"):::api
+        DB[("PostgreSQL")]:::db
+    end
+
+    %% ИИ-Агент
+    subgraph AI ["🤖 AI Automation"]
+        LLM(("Gemini")):::llm
+        Agent("QA Agent"):::agent
+        MCP("MCP Server"):::mcp
+    end
+
+    %% ==========================================
+    %% ВЗАИМОДЕЙСТВИЯ (СВЯЗИ)
+    %% ==========================================
+    
+    %% Внутренние связи Docker
+    API -- "ORM" --> DB
+    
+    %% Внутренние связи AI
+    LLM <--> Agent
+    Agent -- "mcp_tool" --> MCP
+    
+    %% Внешние связи и интеграция
+    Newman -- "HTTP" --> API
+    Agent -- "HTTP (curl)" --> API
+    MCP -- "SQL (Read-only)" --> DB
+
+    %% ==========================================
+    %% СТИЛИЗАЦИЯ ПОДСИСТЕМ (SUBGRAPHS)
+    %% ==========================================
     style Docker fill:#f0f8ff,stroke:#0d6efd,stroke-width:2px,stroke-dasharray: 5 5
     style AI fill:#fdf5e6,stroke:#ff8c00,stroke-width:2px,stroke-dasharray: 5 5
 ```
