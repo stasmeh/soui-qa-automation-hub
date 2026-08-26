@@ -8,6 +8,7 @@ on:
 
 jobs:
   qa-suite:
+    name: Run QA Automation Suite
     runs-on: ubuntu-latest
 
     steps:
@@ -18,9 +19,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: 'npm'
 
-      - name: 📦 Install Newman
-        run: npm install -g newman
+      - name: 📦 Install Dependencies
+        run: npm ci || npm install
 
       - name: 🐳 Start Docker Compose Services
         run: docker compose -f docker/docker-compose.yml up -d --build
@@ -34,19 +36,20 @@ jobs:
       - name: ⏳ Wait for FastAPI Web Service Healthcheck
         run: |
           echo "Waiting for FastAPI service to start..."
-          timeout 60 bash -c 'until curl -s http://localhost:8000/docs > /dev/null; do sleep 2; done'
+          timeout 60 bash -c 'until curl -s -f http://localhost:8000/docs > /dev/null; do sleep 2; done'
           echo "FastAPI service is up and running!"
 
-      - name: 🧪 Run SQL Integrity & Constraint Tests
+      - name: 🧪 Run SQL Integrity & Business Logic Tests
         run: |
+          # 01 содержит намеренные негативные тесты (ошибки CHECK/FK), поэтому добавлен || true
           docker exec -i soui_qa_db psql -U qa_admin -d soui_db < sql-tests/01_integrity_and_constraints.sql || true
-          docker exec -i soui_qa_db psql -U qa_admin -d soui_db < sql-tests/02_business_logic_reports.yaml || true
           docker exec -i soui_qa_db psql -U qa_admin -d soui_db < sql-tests/02_business_logic_reports.sql
 
       - name: 🚀 Run Newman API Automation Suite
         run: |
+          # Очистка тестовых данных перед запуском коллекции Postman
           docker exec -i soui_qa_db psql -U qa_admin -d soui_db -c "DELETE FROM specialty WHERE code_spec = 'ПМАТ';" || true
-          npx newman run tests/soui_postman_collection.json
+          npm run test:api
 
       - name: 🛑 Teardown Containers
         if: always()
