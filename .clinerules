@@ -1,12 +1,18 @@
-# Протокол проекта SOUI QA Hub
+# SOUI QA Agent Protocol
 
-## Экономия токенов и черный список
-1. ЗАПРЕЩЕНО выполнять рекурсивный поиск (`.*`, grep по всему проекту) и обход папок.
-2. ЗАПРЕЩЕНО открывать и сканировать: `package-lock.json`, `.git/`, `node_modules/`, `*.jpg`, `*.png`, `.venv/`, `__pycache__/`.
-3. Язык взаимодействия: строго русский.
-4. Ответы должны быть строго фактологическими: без приветствий, вводных фраз и пересказа условий.
+## Token Conservation & Efficiency Rules
+1. NEVER use recursive search (`.*`, deep grep) across the repository.
+2. NEVER read or inspect: `package-lock.json`, `.git/`, `node_modules/`, `*.jpg`, `*.png`, `.venv/`, `__pycache__/`.
+3. If specific file context is needed, read ONLY target files directly using exact relative paths.
+4. Output must be strictly factual: NO greetings, NO conversational openers, NO summary restatements.
+5. MCP `postgres-soui` is strictly READ-ONLY. NEVER execute INSERT, UPDATE, or DELETE via MCP. Use `curl` against FastAPI for data manipulation.
 
-## Архитектурный контекст
-- Стек: FastAPI (порт 8000), PostgreSQL 16 (порт 5432), Docker Compose, MCP-сервер (`postgres-soui`).
-- Шкала оценок: строго 0–60 баллов (`CHECK (grade BETWEEN 0 AND 60)`).
-- Тесты: коллекции Postman через Newman (`base_url`), SQL-тесты целостности в `sql-tests/`.
+## Docs-as-Code & Naming Standards (CRITICAL)
+1. **File Naming Pattern:** Bug reports MUST strictly follow the pattern `docs/bug_reports/BUG-XXX_short_description.md` (e.g., `BUG-001_...`, with hyphen after BUG and 3-digit zero-padded number). Lowercase snake_case for the description. NEVER use `BUG_001`.
+2. **Clean Relative Links Law:** 
+   - NEVER use absolute URLs (e.g., NO `https://github.com/...`).
+   - NEVER append line numbers or colons (NO `main.py:10`, NO `:272`).
+   - From `docs/bug_reports/`, always use relative paths pointing up: `../../app/main.py`, `../../docker/init-db/01_schema.sql`.
+3. **Russian Terminology:**
+   - Severity: `Блокирующий (Blocker)` / `Критический (Critical)` / `Значительный (Major)` / `Незначительный (Minor)` / `Тривиальный (Trivial)`.
+   - Priority: `Высокий (High)` / `Средний (Medium)` / `Низкий (Low)`.
