@@ -89,17 +89,22 @@ flowchart LR
 ## 📂 Структура репозитория
 ```text
 .
-├── app/                  # Исходный код FastAPI сервиса (models, database)
-├── docker/               # Инфраструктура: docker-compose и SQL-скрипты миграций
+├── app/                  # Исходный код FastAPI сервиса (models, database, main.py)
 ├── docs/                 # QA-документация:
-│   ├── bug_reports/      #   Оформленные баг-репорты 
+│   ├── bug_reports/      #   Оформленные баг-репорты (Markdown)
 │   ├── diagrams/         #   Диаграммы (erd_schema_soui.jpg, mindmap_soui.jpg)
 │   └── test-management/  #   Тест-кейсы и отчёты о тестировании (QA_Checklist.md)
+├── init-db/              # SQL-скрипты для инициализации БД (схемы и тестовые данные)
 ├── mcp/                  # Конфигурация Model Context Protocol для подключения агента
-├── sql-tests/            # SQL-скрипты: проверка констрейнтов и целостности данных
-├── tests/                # Коллекции Postman для автотестов API
-├── .agent/prompts/       # Системные промпты для AI-агента
-└── package.json          # Скрипты запуска автотестов Newman
+├── tests/                # Единая директория классических автотестов:
+│   ├── postman/          #   Коллекции Postman для автотестов API
+│   ├── sql/              #   Интеграционные SQL-скрипты: проверка констрейнтов
+│   └── results/          #   Сгенерированные HTML-отчеты прогонов Newman
+├── .agent/prompts/       # Системные промпты для генерации тестов AI-агентом
+├── .github/              # Настройки CI/CD пайплайна (Actions) и шаблоны Issue/PR
+├── docker-compose.yml    # Инфраструктура стенда (FastAPI + PostgreSQL)
+├── Makefile              # Task-runner для удобного управления проектом
+└── package.json          # Скрипты запуска автотестов и зависимости (Newman)
 ```
 
 ---
@@ -109,9 +114,9 @@ flowchart LR
 Проект разворачивается локально с помощью Docker. Предварительно убедитесь, что у вас установлены Docker и Node.js (для тестов):
 
 ```bash
-git clone https://github.com/stasmeh/soui-qa-automation-hub.git
+git clone [https://github.com/stasmeh/soui-qa-automation-hub.git](https://github.com/stasmeh/soui-qa-automation-hub.git)
 cd soui-qa-automation-hub
-docker compose -f docker/docker-compose.yml up --build -d
+make up
 ```
 
 * **Swagger UI (FastAPI):** [http://localhost:8000/docs](http://localhost:8000/docs)
@@ -133,15 +138,16 @@ docker compose -f docker/docker-compose.yml up --build -d
 
 ## 🧪 Запуск тестов
 
+Вся рутина скрыта под капотом Makefile.
+
 1. **API-автотесты (Postman + Newman):**
    ```bash
-   npm install
-   npm run test:api
+   make test-api
    ```
 
 2. **Интеграционные SQL-тесты целостности БД:**
    ```bash
-   docker exec -i soui_qa_db psql -U qa_admin -d soui_db < sql-tests/01_integrity_and_constraints.sql
+   make test-sql
    ```
 
 ---
