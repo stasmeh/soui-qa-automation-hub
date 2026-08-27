@@ -25,7 +25,9 @@ jobs:
         run: npm ci || npm install
 
       - name: 🐳 Start Docker Compose Services
-        run: docker compose -f docker/docker-compose.yml up -d --build
+        # ИСХОДНЫЙ КОД БЫЛ: docker compose -f docker/docker-compose.yml up -d --build
+        # ТЕПЕРЬ: Используем наш Makefile!
+        run: make up
 
       - name: ⏳ Wait for PostgreSQL Healthcheck
         run: |
@@ -41,9 +43,9 @@ jobs:
 
       - name: 🧪 Run SQL Integrity & Business Logic Tests
         run: |
-          # 01 содержит намеренные негативные тесты (ошибки CHECK/FK), поэтому добавлен || true
-          docker exec -i soui_qa_db psql -U qa_admin -d soui_db < sql-tests/01_integrity_and_constraints.sql || true
-          docker exec -i soui_qa_db psql -U qa_admin -d soui_db < sql-tests/02_business_logic_reports.sql
+          # ПУТИ ИСПРАВЛЕНЫ: sql-tests/ -> tests/sql/
+          docker exec -i soui_qa_db psql -U qa_admin -d soui_db < tests/sql/01_integrity_and_constraints.sql || true
+          docker exec -i soui_qa_db psql -U qa_admin -d soui_db < tests/sql/02_business_logic_reports.sql
 
       - name: 🚀 Run Newman API Automation Suite
         run: |
@@ -53,4 +55,5 @@ jobs:
 
       - name: 🛑 Teardown Containers
         if: always()
-        run: docker compose -f docker/docker-compose.yml down -v
+        # ПУТЬ ИСПРАВЛЕН: Убран флаг -f docker/docker-compose.yml
+        run: docker compose down -v
