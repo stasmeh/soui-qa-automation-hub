@@ -2,8 +2,8 @@
   "name": "soui-qa-automation-hub",
   "version": "1.0.0",
   "scripts": {
-    "test:api": "newman run tests/soui_postman_collection.json --env-var base_url=http://localhost:8000",
-    "test:sql": "docker exec -i soui_qa_db psql -U qa_admin -d soui_db < sql-tests/01_integrity_and_constraints.sql || true"
+    "test:api": "newman run tests/postman/soui_postman_collection.json --env-var base_url=http://localhost:8000",
+    "test:sql": "docker exec -i soui_qa_db psql -U qa_admin -d soui_db < tests/sql/01_integrity_and_constraints.sql || true"
   },
   "devDependencies": {
     "newman": "^6.0.0"
