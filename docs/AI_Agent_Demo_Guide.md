@@ -36,6 +36,6 @@
 Примеры реальных задач, выполненных агентом и сохраненных в репозитории:
 
 * **Поиск дефекта в БД:** Агент проанализировал DDL-схему и нашел ошибку в регулярном выражении `student_group` (не принимает дефис в шифре 'ИВТ-21').
-  👉 [BUG_001_group_code_hyphen_check.md](bug_reports/BUG_001_group_code_hyphen_check.md)
+  👉 [BUG-001-group-code-hyphen-check.md](bug_reports/BUG-001-group-code-hyphen-check.md)
 * **Комплексный QA-аудит:** Агент выполнил SQL-запросы, проверил каскадное удаление, составил матрицу покрытия и нашел логический баг с двойными фамилиями.
   👉 [AI_QA_Audit_Report.md](test-management/AI_QA_Audit_Report.md)
