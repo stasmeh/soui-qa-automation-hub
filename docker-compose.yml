@@ -10,6 +10,8 @@ services:
       - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - soui_pg_data:/var/lib/postgresql/data
+      # ВАЖНО: Если папка init-db осталась внутри папки docker, 
+      # измените этот путь на ./docker/init-db:/docker-entrypoint-initdb.d
       - ./init-db:/docker-entrypoint-initdb.d
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-qa_admin} -d $${POSTGRES_DB:-soui_db}"]
@@ -19,7 +21,7 @@ services:
 
   soui-web-api:
     build:
-      context: ../app
+      context: ./app # Исправлено: теперь указывает на папку рядом
       dockerfile: Dockerfile
     container_name: soui_web_service
     command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
@@ -28,7 +30,7 @@ services:
     environment:
       DATABASE_URL: ${DATABASE_URL:-postgresql://qa_admin:qa_secure_password@postgres-db:5432/soui_db}
     volumes:
-      - ../app:/app
+      - ./app:/app # Исправлено: теперь монтирует папку рядом
     depends_on:
       postgres-db:
         condition: service_healthy
