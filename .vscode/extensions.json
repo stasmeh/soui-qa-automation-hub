@@ -2,7 +2,6 @@
   "recommendations": [
     "ms-python.python",
     "ms-azuretools.vscode-docker",
-    "bierner.markdown-mermaid",
     "ZooCodeOrganization.zoo-code"
   ]
 }
